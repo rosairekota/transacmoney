@@ -9,24 +9,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
- * @Route("/beneficiaire")
+ * @Route("/admin/beneficiaire")
  */
 class BeneficiaireController extends AbstractController
 {
     /**
      * @Route("/", name="beneficiaire_index", methods={"GET"})
+     * @IsGranted("ROLE_WRITER")
      */
     public function index(BeneficiaireRepository $beneficiaireRepository): Response
     {
-        return $this->render('beneficiaire/index.html.twig', [
+        return $this->render('admin/beneficiaire/index.html.twig', [
             'beneficiaires' => $beneficiaireRepository->findAll(),
         ]);
     }
 
     /**
      * @Route("/new", name="beneficiaire_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_WRITER")
      */
     public function new(Request $request): Response
     {
@@ -42,7 +45,7 @@ class BeneficiaireController extends AbstractController
             return $this->redirectToRoute('beneficiaire_index');
         }
 
-        return $this->render('beneficiaire/new.html.twig', [
+        return $this->render('admin/beneficiaire/new.html.twig', [
             'beneficiaire' => $beneficiaire,
             'form' => $form->createView(),
         ]);
@@ -50,16 +53,18 @@ class BeneficiaireController extends AbstractController
 
     /**
      * @Route("/{id}", name="beneficiaire_show", methods={"GET"})
+     * @IsGranted("ROLE_ADMINISTRATOR")
      */
     public function show(Beneficiaire $beneficiaire): Response
     {
-        return $this->render('beneficiaire/show.html.twig', [
+        return $this->render('admin/beneficiaire/show.html.twig', [
             'beneficiaire' => $beneficiaire,
         ]);
     }
 
     /**
      * @Route("/{id}/edit", name="beneficiaire_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_WRITER")
      */
     public function edit(Request $request, Beneficiaire $beneficiaire): Response
     {
@@ -72,7 +77,7 @@ class BeneficiaireController extends AbstractController
             return $this->redirectToRoute('beneficiaire_index');
         }
 
-        return $this->render('beneficiaire/edit.html.twig', [
+        return $this->render('admin/beneficiaire/edit.html.twig', [
             'beneficiaire' => $beneficiaire,
             'form' => $form->createView(),
         ]);
@@ -80,6 +85,7 @@ class BeneficiaireController extends AbstractController
 
     /**
      * @Route("/{id}", name="beneficiaire_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_ADMINISTRATOR")
      */
     public function delete(Request $request, Beneficiaire $beneficiaire): Response
     {

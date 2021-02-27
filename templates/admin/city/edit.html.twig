@@ -1,13 +1,11 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}Edit City{% endblock %}
+{% extends "admin/bars.html.twig" %}
 
-{% block body %}
-    <h1>Edit City</h1>
+{% block contenpage %}
+    <div class="container">
+        <h1>{{ "backend.agence.edit"|trans }}</h1>
 
-    {{ include('admin/city/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ include('admin/city/_form.html.twig', {'button_label': 'Editer'}) }}
 
-    <a href="{{ path('city_index') }}">back to list</a>
-
-    {{ include('city/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

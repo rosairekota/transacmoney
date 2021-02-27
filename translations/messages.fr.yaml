@@ -22,10 +22,14 @@ backend:
     depot: Depot
     exp: Expediteur
     ben : Beneficiaire
+    client: Clients
     manage: Gérer
-    categories: Categorie
+    category: Categorie
     blog: Blog
+    post: Articles
     history: Historique
+    send : Depot
+    receive: Retrait
   role:
     choice_role: Choisissez un role
   user:
@@ -35,6 +39,7 @@ backend:
     deactivate: Desactiver
     Activate: Activer
     delete: Suprimer
+    view: Visualiser
     username: Nom d'utilisateur
     email: Email
     name: Nom Complet
@@ -54,3 +59,27 @@ backend:
     changed_password: Mot de passe modifié
     add_user: Utilisateur ajouté
     modify_user: Utilisateur modifié
+  agence:
+    agence_listing: Liste des Agences
+    create: Creer une Nouvelle Agence
+    edit: Mettre à jour
+  city:
+    city_listing: Liste des Villes
+    create: Creer une Nouvelle Ville
+    edit: Mettre à jour
+  expediteur:
+    expediteur_listing: Liste des Expediteurs
+    create: Creer une Nouvel Expediteur
+    edit: Mettre à jour
+  beneficiaire:
+    beneficiaire_listing: Liste des beneficiaires
+    create: Creer une Nouvel Expediteur
+    edit: Mettre à jour
+  depot:
+    depot_listing: Liste des dépots
+    create: Effectuer un nouveau dépot
+    edit: Mettre à jour
+  retrait:
+    depot_listing: Liste des retraits
+    create: Effectuer un retrait
+    edit: Mettre à jour

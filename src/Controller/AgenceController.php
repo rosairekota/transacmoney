@@ -16,14 +16,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class AgenceController extends AbstractController
 {
-    /**
+   
+     /**
      * @Route("/", name="agence_index", methods={"GET"})
-     * @IsGranted("ROLE_WRITER")
+     * @IsGranted("ROLE_ADMINISTRATOR")
      */
     public function index(AgenceRepository $agenceRepository): Response
     {
-        return $this->render('admin/index.html.twig', [
-            
+        return $this->render('admin/agence/index.html.twig', [
+            'agences'   =>$agenceRepository->findAll()
         ]);
     }
 

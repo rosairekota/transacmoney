@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\RetraitRepository;
+use App\Entity\User;
+use App\Entity\Depot;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RetraitRepository;
 
 /**
  * @ORM\Entity(repositoryClass=RetraitRepository::class)

@@ -1,7 +1,7 @@
 {% extends "admin/bars.html.twig" %}
 
 {% block contenpage %}
-	<div class="">
+	<div class="container">
 		<div class="page-title">
 			<div class="title_left">
 				<h5>
@@ -17,10 +17,10 @@
 				<div class="x_panel">
 					<div class="x_title">
 						<h2>
-							{{ "backend.user.user_listing"|trans }}</h2>
+							{{ "backend.expediteur.expediteur_listing"|trans }}</h2>
 						<ul class="nav navbar-right panel_toolbox">
 							<li>
-								<a href="{{ path('app_admin_new_user') }}" class="btn btn-success">NEW</a>
+								<a href="{{ path('expediteur_new') }}" class="btn btn-success">CREER</a>
 							</li>
 						</ul>
 						<div class="clearfix"></div>
@@ -46,43 +46,34 @@
 							<table id="example" class="display table table-striped table-bordered dataminetables">
 								<thead>
 									<th><input type="checkbox" id="select_all" name="select_all"></th>
-									<th>{{ "backend.user.username"|trans }}</th>
-									<th>{{ "backend.user.email"|trans }}</th>
-									<th>{{ "backend.user.name"|trans }}</th>
-									<th>{{ "backend.user.agence"|trans }}</th>
+									<th>Nom</th>
+                                    <th>Postnom</th>
+                                    <th>Prenom</th>
+                                    <th>Telephone</th>
 									<th>{{ "backend.user.modifier"|trans }}</th>
-									<th>{{ "backend.user.status"|trans }}</th>
+
+                                    {% if is_granted("ROLE_SUPERUSER") %}
 									<th>{{ "backend.user.delete"|trans }}</th>
+                                    {% endif %}
 								</thead>
 								<tbody>
-									{% for user in users|filter(user => not user.deleted)  %}
+                                    {% for expediteur in expediteurs %}
 										<tr>
-											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{ user.id }}"></td>
-											<td>{{ user.username }}</td>
-											<td>{{ user.email }}</td>
-											<td>{{ user.nomComplet }}</td>
-											<td>{{ user.agence.name }}</td>
+											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{ expediteur.id }}"></td>
+                                            <td>{{ expediteur.nom }}</td>
+                                            <td>{{ expediteur.postnom }}</td>
+                                            <td>{{ expediteur.prenom }}</td>
+                                            <td>{{ expediteur.telephone }}</td>
 											<td>
-												<a class="btn btn-primary" href="{{ path('app_admin_edit_user',{"id":user.id}) }}">
+												<a class="btn btn-primary" href="{{ path('expediteur_edit', {'id': expediteur.id}) }}">
 													<i class="fa fa-edit"></i>
 												</a>
 											</td>
+                                            
 											<td>
-												{%  if user.valid %}
-													<a class="btn btn-success activate-link" href="{{ path('app_admin_changevalidite_user', {'id': user.id}) }}">
-														<i class="fa fa-check"></i>
-													</a>
-												{% else %}
-													<a class="btn btn-warning activate-link" href="{{ path('app_admin_changevalidite_user', {'id': user.id}) }}">
-														<i class="fa fa-times"></i>
-													</a>
-												{% endif %}
+                                                {{ include('admin/expediteur/_delete_form.html.twig') }}
 											</td>
-											<td>
-												<a href="{{ path('app_admin_delete_user', {'id': user.id}) }}" class="btn btn-danger disable-btn del-link" type="submit">
-													<i class="fa fa-trash"></i>
-												</a>
-											</td>
+                                        
 										</tr>
 									{% endfor %}
 								</tbody>

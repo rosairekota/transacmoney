@@ -1,7 +1,7 @@
 {% extends "admin/bars.html.twig" %}
 
 {% block contenpage %}
-	<div class="">
+	<div class="container">
 		<div class="page-title">
 			<div class="title_left">
 				<h5>
@@ -17,10 +17,10 @@
 				<div class="x_panel">
 					<div class="x_title">
 						<h2>
-							{{ "backend.user.user_listing"|trans }}</h2>
+							{{ "backend.depot.depot_listing"|trans }}</h2>
 						<ul class="nav navbar-right panel_toolbox">
 							<li>
-								<a href="{{ path('app_admin_new_user') }}" class="btn btn-success">NEW</a>
+								<a href="{{ path('depot_new',{'user_email':app.user.email}) }}" class="btn btn-success">CREER</a>
 							</li>
 						</ul>
 						<div class="clearfix"></div>
@@ -46,43 +46,39 @@
 							<table id="example" class="display table table-striped table-bordered dataminetables">
 								<thead>
 									<th><input type="checkbox" id="select_all" name="select_all"></th>
-									<th>{{ "backend.user.username"|trans }}</th>
-									<th>{{ "backend.user.email"|trans }}</th>
-									<th>{{ "backend.user.name"|trans }}</th>
-									<th>{{ "backend.user.agence"|trans }}</th>
+                                    <th>Montant</th>
+                                    <th>Code Dépot</th>
+                                    <th>Date Dépot</th>
+                                    <th>Montant Commission</th>
+                                    <th>Expediteur</th>
+                                    <th>Beneficiaire</th>
+                                    {% if is_granted("ROLE_SUPERUSER") %}
 									<th>{{ "backend.user.modifier"|trans }}</th>
-									<th>{{ "backend.user.status"|trans }}</th>
+
 									<th>{{ "backend.user.delete"|trans }}</th>
+                                    {% endif %}
 								</thead>
 								<tbody>
-									{% for user in users|filter(user => not user.deleted)  %}
+                                    {% for depot in depots %}
 										<tr>
-											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{ user.id }}"></td>
-											<td>{{ user.username }}</td>
-											<td>{{ user.email }}</td>
-											<td>{{ user.nomComplet }}</td>
-											<td>{{ user.agence.name }}</td>
+											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{depot.id }}"></td>
+                                            <td>{{ depot.montant }}</td>
+                                            <td>{{ depot.codeDepot }}</td>
+                                            <td>{{ depot.dateDepot ? depot.dateDepot|date('Y-m-d H:i:s') : '' }}</td>
+                                            <td>{{ depot.montantCommission }}</td>
+                                            <td>{{ depot.expediteur.nom }}</td>
+                                            <td>{{ depot.beneficiaire.nom }}</td>
+                                            {% if is_granted("ROLE_SUPERUSER") %}
 											<td>
-												<a class="btn btn-primary" href="{{ path('app_admin_edit_user',{"id":user.id}) }}">
+												<a class="btn btn-primary" href="{{ path('expediteur_edit', {'id': depot.id}) }}">
 													<i class="fa fa-edit"></i>
 												</a>
 											</td>
+                                            
 											<td>
-												{%  if user.valid %}
-													<a class="btn btn-success activate-link" href="{{ path('app_admin_changevalidite_user', {'id': user.id}) }}">
-														<i class="fa fa-check"></i>
-													</a>
-												{% else %}
-													<a class="btn btn-warning activate-link" href="{{ path('app_admin_changevalidite_user', {'id': user.id}) }}">
-														<i class="fa fa-times"></i>
-													</a>
-												{% endif %}
+                                                {{ include('admin/depot/_delete_form.html.twig') }}
 											</td>
-											<td>
-												<a href="{{ path('app_admin_delete_user', {'id': user.id}) }}" class="btn btn-danger disable-btn del-link" type="submit">
-													<i class="fa fa-trash"></i>
-												</a>
-											</td>
+                                            {% endif %}
 										</tr>
 									{% endfor %}
 								</tbody>

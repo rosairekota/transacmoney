@@ -2,10 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\DepotRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\City;
+use App\Entity\User;
+use App\Entity\Retrait;
+use App\Entity\Expediteur;
+use App\Entity\Beneficiaire;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DepotRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=DepotRepository::class)
@@ -193,7 +198,7 @@ class Depot
     /**
      * Get the value of user_depot
      */ 
-    public function getUser_depot()
+    public function getUser_depot():?User
     {
         return $this->user_depot;
     }
@@ -203,7 +208,7 @@ class Depot
      *
      * @return  self
      */ 
-    public function setUser_depot($user_depot)
+    public function setUser_depot(?User $user_depot)
     {
         $this->user_depot = $user_depot;
 
