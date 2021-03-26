@@ -1,6 +1,6 @@
 backend:
   global:
-    welcome: Welcome
+    welcome: Bienvenue
     you_are_logged: You are logged in as
     leave_impersonate: Leaving impersonation
     change_my_password: Change my password
@@ -15,7 +15,7 @@ backend:
   menu:
     home: Home
     user: User
-    manage: Manage
+    manage: Gérer
     categories: Categories
     exp: Expediteur
     ben : Beneficiaire
@@ -80,6 +80,6 @@ backend:
     create: Effectuer un nouveau dépot
     edit: Mettre à jour
   retrait:
-    depot_listing: Liste des retraits
+    retrait_listing: Liste des retraits
     create: Effectuer un retrait
     edit: Mettre à jour

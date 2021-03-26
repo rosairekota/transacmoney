@@ -28,10 +28,10 @@ class ExpediteurController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="expediteur_new", methods={"GET","POST"})
+     * @Route("/new/", name="expediteur_newSimple", methods={"GET","POST"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function new(Request $request): Response
+    public function add(Request $request): Response
     {
         $expediteur = new Expediteur();
         $form = $this->createForm(ExpediteurType::class, $expediteur);
@@ -43,6 +43,29 @@ class ExpediteurController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('expediteur_index');
+        }
+
+        return $this->render('admin/expediteur/new.html.twig', [
+            'expediteur' => $expediteur,
+            'form' => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/new/{user_email}-@j9a8j7k94", name="expediteur_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_WRITER")
+     */
+    public function new(Request $request,$user_email): Response
+    {
+        $expediteur = new Expediteur();
+        $form = $this->createForm(ExpediteurType::class, $expediteur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($expediteur);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('depot_new',["user_email"=>$user_email]);
         }
 
         return $this->render('admin/expediteur/new.html.twig', [

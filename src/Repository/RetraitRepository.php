@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Search;
 use App\Entity\Retrait;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Retrait|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,19 +23,19 @@ class RetraitRepository extends ServiceEntityRepository
     // /**
     //  * @return Retrait[] Returns an array of Retrait objects
     //  */
-    /*
-    public function findByExampleField($value)
+    /**/
+    public function findSecretCode(Search $search)
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('r.code_retrait = :val')
+            ->setParameter('val', $search->code_secret)
             ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults(1)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+        
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Retrait

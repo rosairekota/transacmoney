@@ -18,11 +18,10 @@ class DepotType extends AbstractType
     {
         $builder
             ->add('montant')
-            ->add('date_depot')
             ->add('expediteur',EntityType::class,[
                 'class'         =>Expediteur::class,
-                'choice_label'  =>'nom'
-            ])
+                'choice_label'  =>'nom']
+            )
             ->add('beneficiaire',EntityType::class,[
                 'class'         =>Beneficiaire::class,
                 'choice_label'  =>'nom']

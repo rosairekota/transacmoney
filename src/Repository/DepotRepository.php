@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Depot;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Depot|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,27 +16,39 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class DepotRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private EntityManagerInterface $em;
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
     {
         parent::__construct($registry, Depot::class);
+        $this->em=$em;
     }
 
     // /**
     //  * @return Depot[] Returns an array of Depot objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findByEmail(int $id)
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('d.user_depot= :val')
+            ->setParameter('val', $id)
             ->orderBy('d.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    public function selectByIdSql($datas)
+    {
+            $con=$this->em->getConnection();
+             $sql="SELECT * FROM depot d
+             WHERE d.user_depot_id=:id";
+        
+            $stmt=$con->prepare($sql);
+            $stmt->execute($datas);
+           return $stmt->fetchAllAssociative();
+        
+    }
 
     /*
     public function findOneBySomeField($value): ?Depot

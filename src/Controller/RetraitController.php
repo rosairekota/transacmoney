@@ -3,32 +3,87 @@
 namespace App\Controller;
 
 use App\Entity\Retrait;
+use App\Entity\Search;
 use App\Form\RetraitType;
+use App\Form\SearchType;
 use App\Repository\RetraitRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/retrait")
+ * @Route("/admin/retrait")
  */
 class RetraitController extends AbstractController
-{
-    /**
-     * @Route("/", name="retrait_index", methods={"GET"})
+{ 
+     /**
+     * @Route("/", name="retrait_index", methods={"GET|POST"})
+     *  @IsGranted("ROLE_WRITER")
      */
-    public function index(RetraitRepository $retraitRepository): Response
-    {
-        return $this->render('retrait/index.html.twig', [
+    public function index(RetraitRepository $retraitRepository,Request $request): Response
+    {   $search=new Search();
+        $form=$this->createForm(SearchType::class,$search);
+        $form->handleRequest($request);
+       
+        
+        if ($form->isSubmitted()&& $form->isValid()) {
+            $secretCode=$retraitRepository->findSecretCode($search);
+            if (empty($secretCode)) {
+                $this->addFlash('success',"ce code($secretCode) est valide.<br> Effectuer le retrait");
+                dd($secretCode);
+            }
+            else{
+                $this->addFlash('danger',"ce code(($secretCode) est invalide.<br>  retrait non autorisé !");
+            return $this->render('admin/retrait/index.html.twig', [
+                'retraits' => $retraitRepository->findAll(),
+                'form'     =>$form->createView(),
+                '$secretCode'=>$secretCode
+            ]);
+            }
+        }
+        return $this->render('admin/retrait/index.html.twig', [
             'retraits' => $retraitRepository->findAll(),
+            'form'     =>$form->createView(),
+            
+        ]);
+    }
+    /**
+     * @Route("/search", name="retrait_search", methods={"GET|POST"})
+     *  @IsGranted("ROLE_WRITER")
+     */
+    public function search(RetraitRepository $retraitRepository,Request $request): Response
+    {   $search=new Search();
+        $form=$this->createForm(SearchType::class,$search);
+        $form->handleRequest($request);
+        $response='';
+        
+        if ($form->isSubmitted()&& $form->isValid()) {
+            
+            $secretCode=$retraitRepository->findSecretCode($search);
+          
+            if (!empty($secretCode)) {
+                $this->addFlash('success',"$search->code_secret) est valide.Effectuer le retrait");
+              
+            }
+            else{
+                $this->addFlash('danger',"$search->code_secret est invalide! retrait non autorisé !");
+                $response='Cliquez ici pour retiter votre argent';
+            }
+        }
+        return $this->render('admin/retrait/searchCode.html.twig',[
+            'form'     =>$form->createView(),
+            'response'=>$response,
+            
         ]);
     }
 
     /**
-     * @Route("/new", name="retrait_new", methods={"GET","POST"})
+     * @Route("/new/{user_email}", name="retrait_new", methods={"GET","POST"})
+     *  @IsGranted("ROLE_WRITER")
      */
-    public function new(Request $request): Response
+    public function new($user_email,Request $request): Response
     {
         $retrait = new Retrait();
         $form = $this->createForm(RetraitType::class, $retrait);
@@ -42,7 +97,7 @@ class RetraitController extends AbstractController
             return $this->redirectToRoute('retrait_index');
         }
 
-        return $this->render('retrait/new.html.twig', [
+        return $this->render('admin/retrait/new.html.twig', [
             'retrait' => $retrait,
             'form' => $form->createView(),
         ]);
@@ -60,6 +115,7 @@ class RetraitController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="retrait_edit", methods={"GET","POST"})
+     *  @IsGranted("ROLE_WRITER")
      */
     public function edit(Request $request, Retrait $retrait): Response
     {
@@ -72,7 +128,7 @@ class RetraitController extends AbstractController
             return $this->redirectToRoute('retrait_index');
         }
 
-        return $this->render('retrait/edit.html.twig', [
+        return $this->render('admin/retrait/edit.html.twig', [
             'retrait' => $retrait,
             'form' => $form->createView(),
         ]);
@@ -80,6 +136,7 @@ class RetraitController extends AbstractController
 
     /**
      * @Route("/{id}", name="retrait_delete", methods={"DELETE"})
+     *  @IsGranted("ROLE_WRITER")
      */
     public function delete(Request $request, Retrait $retrait): Response
     {

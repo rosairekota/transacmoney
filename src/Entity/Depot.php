@@ -9,6 +9,7 @@ use App\Entity\Expediteur;
 use App\Entity\Beneficiaire;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DepotRepository;
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -72,6 +73,7 @@ class Depot
     public function __construct()
     {
         $this->retraits = new ArrayCollection();
+        $this->date_depot=new DateTime();
     }
 
     public function getId(): ?int

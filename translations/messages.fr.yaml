@@ -16,6 +16,7 @@ backend:
     home: Accueil
     user: Utilisateur
     city: ville
+    manage: Gérer
     agence: Agence
     account: Compte
     retrait: Retrait
@@ -80,6 +81,6 @@ backend:
     create: Effectuer un nouveau dépot
     edit: Mettre à jour
   retrait:
-    depot_listing: Liste des retraits
+    retrait_listing: Liste des retraits
     create: Effectuer un retrait
     edit: Mettre à jour

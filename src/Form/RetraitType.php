@@ -12,15 +12,24 @@ class RetraitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('montantRetire')
-            ->add('montantRestant')
-            ->add('date_retrait')
-            ->add('beneficiaire_piece_type')
-            ->add('beneficiaire_piece_image')
-            ->add('beneficiaire_piece_numero')
+            ->add('montantRetire',null,['attr'=>[
+                'readonly'=>true
+            ]])
+            ->add('code_retrait',null,['attr'=>[
+                'readonly'=>true
+            ]])
+            ->add('beneficiaire_piece_type',null,[
+                'label' =>"Type de la pièce d'identité",
+                'attr'=>[
+                'placeholder'=>"Ex: Carte d'Electeur"
+            ]])
+            ->add('beneficiaire_piece_numero',null,[
+                'label' =>"Numéro de la pièce d'identité",
+                'attr'=>[
+                'placeholder'=>"Ex: 4012 0010 38"
+            ]])
             ->add('libelle')
-            ->add('depot')
-            ->add('user_retrait')
+           
         ;
     }
 

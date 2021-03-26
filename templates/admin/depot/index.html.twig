@@ -61,8 +61,10 @@
 								<tbody>
                                     {% for depot in depots %}
 										<tr>
+											
+											
 											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{depot.id }}"></td>
-                                            <td>{{ depot.montant }}</td>
+                                            <td><a href="{{ path('depot_show', {'id': depot.id,'user_email':app.user.email}) }}">{{ depot.montant }}</a></td>
                                             <td>{{ depot.codeDepot }}</td>
                                             <td>{{ depot.dateDepot ? depot.dateDepot|date('Y-m-d H:i:s') : '' }}</td>
                                             <td>{{ depot.montantCommission }}</td>
@@ -70,7 +72,7 @@
                                             <td>{{ depot.beneficiaire.nom }}</td>
                                             {% if is_granted("ROLE_SUPERUSER") %}
 											<td>
-												<a class="btn btn-primary" href="{{ path('expediteur_edit', {'id': depot.id}) }}">
+												<a class="btn btn-primary" href="{{ path('depot_edit', {'id': depot.id,'user_email':app.user.email}) }}">
 													<i class="fa fa-edit"></i>
 												</a>
 											</td>
@@ -80,6 +82,7 @@
 											</td>
                                             {% endif %}
 										</tr>
+
 									{% endfor %}
 								</tbody>
 							</table>

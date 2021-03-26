@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use App\Entity\User;
 use App\Entity\Depot;
 use Doctrine\ORM\Mapping as ORM;
@@ -63,6 +64,17 @@ class Retrait
      * @ORM\Column(type="text", nullable=true)
      */
     private $libelle;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $code_retrait;
+
+
+    public function __construct(){
+        $this->date_retrait=new DateTime();
+    }
+    
 
     public function getId(): ?int
     {
@@ -173,6 +185,18 @@ class Retrait
     public function setLibelle(?string $libelle): self
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getCodeRetrait(): ?string
+    {
+        return $this->code_retrait;
+    }
+
+    public function setCodeRetrait(string $code_retrait): self
+    {
+        $this->code_retrait = $code_retrait;
 
         return $this;
     }

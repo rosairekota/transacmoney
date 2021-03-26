@@ -50,7 +50,29 @@ class BeneficiaireController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+     /**
+     * @Route("/new/{user_email}-@j9a8j7k94", name="beneficiaire_depot", methods={"GET","POST"})
+     * @IsGranted("ROLE_WRITER")
+     */
+    public function newDepot(Request $request,$user_email): Response
+    {
+        $beneficiaire = new Beneficiaire();
+        $form = $this->createForm(BeneficiaireType::class, $beneficiaire);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($beneficiaire);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('depot_new',["user_email"=>$user_email]);
+        }
+
+        return $this->render('admin/beneficiaire/new.html.twig', [
+            'beneficiaire' => $beneficiaire,
+            'form' => $form->createView(),
+        ]);
+    }
     /**
      * @Route("/{id}", name="beneficiaire_show", methods={"GET"})
      * @IsGranted("ROLE_ADMINISTRATOR")

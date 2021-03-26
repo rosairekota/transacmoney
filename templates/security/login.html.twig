@@ -27,106 +27,168 @@
 	<link
 	href="{{ asset('vendors/iCheck/skins/flat/green.css') }}" rel="stylesheet">
 	<!-- Custom Theme Style -->
-	<link href="{{ asset('build/css/custom.min.css') }}" rel="stylesheet">
+	<link href="{{ asset('build/css/custom.css') }}" rel="stylesheet">
+  <link href="{{ asset('build/css/form.css') }}" rel="stylesheet">
 {% endblock %}
 {% block bodyclass %}class="login"
 {% endblock %}
 {% block body %}
-	<div>
-		<a class="hiddenanchor" id="signup"></a>
-		<a class="hiddenanchor" id="signin"></a>
-		<div class="login_wrapper">
-			<div class="animate form login_form">
-				<section class="login_content">
-					<form method="post">
-						<h1>ADMIN</h1>
-						<div>
-							<input type="text" value="{{ last_username }}" name="username" id="inputText" class="form-control" placeholder="Username" required autofocus>
-						</div>
-						<div>
-							<input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-							<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-						</div>
-						<div>
-							<input type="checkbox" class="" name="_remember_me"><span>Se souvenir de moi</span>
-						</div>
-						<div>
-							<button class="btn btn-success submit" href="index.html">Connexion</button>
-							<a class="reset_pass" href="{{path('app_forgot_password_request')}}">Mot de passe oublie?</a>
-						</div>
+    <nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
+      <div class="container">
+        <div class="navbar-translate">
+          <a class="navbar-brand" href="https://transacmoney.com">
+            TRANSACMONEY </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://twitter.com/CreativeTim" target="_blank" data-original-title="Follow us on Twitter">
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://www.facebook.com/CreativeTim" target="_blank" data-original-title="Like us on Facebook">
+                <i class="fa fa-facebook-square"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://www.instagram.com/CreativeTimOfficial" target="_blank" data-original-title="Follow us on Instagram">
+                <i class="fa fa-instagram"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  
+    {# <div class="page-header header-filter" style="background-image: url('https://images.unsplash.com/photo-1508144753681-9986d4df99b3?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=b3cf0ccc6287057b5a71b0ecdd6cf3f4&auto=format&fit=crop&w=6000&q=80 6000w'); background-size: cover; background-position:center;"> #}
+      <div class="page-header header-filter slidered">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+            <div class="card card-login">
+              <form class="form" method="post" action="">
+                <div class="card-header card-header-primary text-center">
+                  <h4 class="card-title">Se Connecter</h4>
+                  <div class="social-line">
+                    <a href="#pablo" class="btn btn-just-icon btn-link">
+                      <i class="fa fa-facebook-square"></i>
+                    </a>
+                    <a href="#pablo" class="btn btn-just-icon btn-link">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="#pablo" class="btn btn-just-icon btn-link">
+                      <i class="fa fa-google-plus"></i>
+                    </a>
+                  </div>
+                </div>
+                <p class="description text-center">Ou Avec:</p>
+                <div class="clearfix"></div>
+                {% if error %}
+                  <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+                <div class="card-body">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="material-icons">mail</i>
+                      </span>
+                    </div>
+                    <input type="email" class="form-control" placeholder="Email..." value="{{ last_username }}" name="username">
+                  </div>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="material-icons">lock_outline</i>
+                      </span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Mot de pass..." name="password">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                  </div>
+                </div>
+                <div class="footer text-center">
+                  <button class="btn btn-success btn-login" href="index.html">Connexion</button>
+                 
+                </div>
+               
+              </form>
+            </div>
+            <div class="text-center">
+              <h5 class="text-center">
+                <i class="fa fa-paw"></i>
+                TRANSACMONEY</h5>
+              <p>©{{ "now"|date("Y") }}
+                {{ "backend.login.all_rights"|trans }}
+                <a target="_blank" href="https://transacmoney.com" id="link-transac">transacmoney.com<a/></p>
+              </p>
+            </div>
+          </div>
 
-						<div class="separator">
-							{# <p class="change_link">
-								{{ "backend.login.new_site"|trans }}
-								<a href="#signup" class="to_register">
-									{{ "backend.login.create_acount"|trans }}
-								</a>
-							</p> #}
-
-							<div class="clearfix"></div>
-							<br/>
-
-							<div>
-								<h1>
-									<i class="fa fa-paw"></i>
-									TRANSACMONEY</h1>
-								<p>©{{ "now"|date("Y") }}
-									{{ "backend.login.all_rights"|trans }}
-									<a target="_blank" href="//example.com">example.com<a/></p>
-								</p>
-							</div>
-						</div>
-
-						<div class="clearfix"></div>
-						{% if error %}
-							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-						{% endif %}
-					</form>
-				</section>
-			</div>
-			<div id="register" class="animate form registration_form">
-				<section class="login_content">
-					<form>
-						<h1>
-							{{ "backend.login.create_acount"|trans }}</h1>
-						<div>
-							<input type="text" class="form-control" placeholder="Username" required=""/>
-						</div>
-						<div>
-							<input type="email" class="form-control" placeholder="Email" required=""/>
-						</div>
-						<div>
-							<input type="password" class="form-control" placeholder="Password" required=""/>
-						</div>
-						<div>
-							<a class="btn btn-default submit" href="index.html">Submit</a>
-						</div>
-
-						<div class="clearfix"></div>
-
-						<div class="separator">
-							<p class="change_link">{{ "backend.login.already_member"|trans }}
-								<a href="#signin" class="to_register">
-									{{ "backend.login.log_in"|trans }}
-								</a>
-							</p>
-
-							<div class="clearfix"></div>
-							<br/>
-							<div>
-								<h1>
-									<i class="fa fa-paw"></i>
-									ADMIN PANEL</h1>
-								<p>©{{ "now"|date("Y") }}
-									{{ "backend.login.all_rights"|trans }}
-									<a target="_blank" href="//example.com">example.com<a/></p>
-								</p>
-							</div>
-						</div>
-					</form>
-				</section>
-			</div>
-		</div>
-	</div>
+        </div>
+      </div>
+      
+    </div>
+  
 {% endblock %}
-{% block javascripts %}{% endblock %}
+{% block javascript %}
+<script>
+       
+  $(document).on('click', '.navbar-toggler', function() {
+      $toggle = $(this);
+    
+      if (materialKit.misc.navbar_menu_visible == 1) {
+        $('body').removeClass('nav-open');
+        materialKit.misc.navbar_menu_visible = 0;
+        $('#bodyClick').remove();
+        setTimeout(function() {
+          $toggle.removeClass('toggled');
+        }, 550);
+    
+        $('body').removeClass('nav-open-absolute');
+      } else {
+        setTimeout(function() {
+          $toggle.addClass('toggled');
+        }, 580);
+    
+    
+        div = '<div id="bodyClick"></div>';
+        $(div).appendTo("body").click(function() {
+          $('body').removeClass('nav-open');
+    
+          if ($('nav').hasClass('navbar-absolute')) {
+            $('body').removeClass('nav-open-absolute');
+          }
+          materialKit.misc.navbar_menu_visible = 0;
+          $('#bodyClick').remove();
+          setTimeout(function() {
+            $toggle.removeClass('toggled');
+          }, 550);
+        });
+    
+        if ($('nav').hasClass('navbar-absolute')) {
+          $('html').addClass('nav-open-absolute');
+        }
+    
+        $('body').addClass('nav-open');
+        materialKit.misc.navbar_menu_visible = 1;
+      }
+    });
+    
+    materialKit = {
+      misc: {
+        navbar_menu_visible: 0,
+        window_width: 0,
+        transparent: true,
+        fixedTop: false,
+        navbar_initialized: false,
+        isWindow: document.documentMode || /Edge/.test(navigator.userAgent)
+      }
+     };
+     </script>
+{% endblock javascript %}
