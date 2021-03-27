@@ -1,4 +1,47 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+<div class="container">
+    <div class="page-title">
+        <div class="title_left">
+            <h5><a href="{{ path('city_index') }}">{{ "backend.city.city_listing"|trans }}</a> &gt;&gt; {{ "backend.menu.city"|trans }} </h5>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>{{ "backend.menu.city"|trans }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    {{ form_start(form) }}
+   
+                    {{ form_widget(form) }}
+                    
+                     <div class="ln_solid"></div>
+                    <div class="item form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <a class="btn btn-warning" href="{{ path('app_admin_index') }}">{{ "backend.user.cancel"|trans }}</a>
+                            <button class="btn btn-primary"><i class="fa fa-save"></i>{{ button_label|default('Enregistrer') }}</button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

@@ -3919,6 +3919,20 @@ a.btn-danger {
   font-size: 10px;
   font-weight: 400;
 }
+.btn-content{
+  background-color:#f0f0f0;
+  color: #a73342;
+  padding: 1rem;
+  box-shadow:2px 2px 4px #58a733;
+  font-size: 1rem !important;
+  margin-top: 2rem !important;
+}
+.btn-content:hover{
+  background-color:#f0f0f0;
+  color: #3352a7;
+  padding: 1rem;
+  box-shadow:2px 2px 4px #58a733;
+}
 
 
 /* ***** /buttons *******/

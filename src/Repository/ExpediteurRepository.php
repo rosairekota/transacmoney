@@ -18,7 +18,20 @@ class ExpediteurRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Expediteur::class);
     }
-
+    // public function findByEmail(int $id)
+    // {
+    //     return $this->getQueryBuilder()
+    //         ->andWhere('exp.user_retrait= :id')
+    //         ->setParameter('id', $id)
+    //         ->orderBy('exp.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
+    // private function getQueryBuilder(){
+    //     return $this->createQueryBuilder('exp');
+    // }
     // /**
     //  * @return Expediteur[] Returns an array of Expediteur objects
     //  */

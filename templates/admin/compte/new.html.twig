@@ -1,11 +1,12 @@
-{% extends 'base.html.twig' %}
 
-{% block title %}New Compte{% endblock %}
+{% extends "admin/bars.html.twig" %}
 
-{% block body %}
-    <h1>Create new Compte</h1>
+{% block contenpage %}
+    <div class="container">
+        <h1>Creer un nouveau Compte</h1>
 
-    {{ include('compte/_form.html.twig') }}
+        {{ include('admin/compte/_form.html.twig', {'button_label': 'Enregistrer'}) }}
 
-    <a href="{{ path('compte_index') }}">back to list</a>
+    </div>
 {% endblock %}
+

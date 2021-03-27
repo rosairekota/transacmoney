@@ -25,19 +25,24 @@
                 <div class="card-body">
                   <div class="row">
                     <div class="col-md-12">
-                      <h5 class="card-title text-muted mb-0 h2 font-weight-bold text-center">Verification du Code</h5>
+                      <h5 class="card-title text-muted mb-0 h2 font-weight-bold text-center mb-4">Verification du Code</h5>
                     </div>
                   <div class="col-sm-12">
-                    {% for label, messages in app.flashes(['danger', 'warning','success']) %}
+                    <div class=" row">
+                    {% for label, messages in app.flashes(['danger', 'info','success']) %}
                     {% for message in messages %}
-                        <div class="alert alert-{{ label }}">
-                            {{ message }} 
-                           &nbsp;&nbsp; &nbsp;<span><a href="http://" class="btn-primary text-lg btn-content">{{response}}</a> </span>
-                            
+                        
+                        <div class="col-sm-6 alert alert-{{ label }}"> {{ message }} </div>
+                        <div class="col-sm-6">
+                           {% if label == 'info' %}
+                            &nbsp;&nbsp; &nbsp;<span class="alert alert-{{ label }} ml-5 mt-4"><a href="{{ path('retrait_new',{'user_email':app.user.email}) }}" class="btn-content">{{response}}</a> </span>
+                            {% endif %}
                         </div>
+                            
                     {% endfor %}
+                     
                  {% endfor %}
-              
+                    </div>
                   </div>
                   <div class="col-sm-6 offset-sm-3 mt-5 mb-0 text-muted text-sm text-center text-white">
                    

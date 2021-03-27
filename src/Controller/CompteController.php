@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Compte;
 use App\Form\CompteType;
 use App\Repository\CompteRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,7 @@ class CompteController extends AbstractController
      */
     public function index(CompteRepository $compteRepository): Response
     {
-        return $this->render('compte/index.html.twig', [
+        return $this->render('admin/compte/index.html.twig', [
             'comptes' => $compteRepository->findAll(),
         ]);
     }
@@ -42,18 +43,30 @@ class CompteController extends AbstractController
             return $this->redirectToRoute('compte_index');
         }
 
-        return $this->render('compte/new.html.twig', [
+        return $this->render('admin/compte/new.html.twig', [
             'compte' => $compte,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="compte_show", methods={"GET"})
+     * @Route("/xb@h/{user_email}", name="compte_show", methods={"GET"})
+     */
+    public function showByUser($user_email,UserRepository $userRepository,CompteRepository $compte): Response
+    {
+        $user=$userRepository->findOneByUsernameOrEmail($user_email);
+       
+        return $this->render('admin/compte/show.html.twig', [
+            'comptes' => $compte->findByUser($user),
+        ]);
+    }
+    
+    /**
+     * @Route("/xb@h/{id}", name="compte_show_two", methods={"GET"})
      */
     public function show(Compte $compte): Response
     {
-        return $this->render('compte/show.html.twig', [
+        return $this->render('admin/compte/show.html.twig', [
             'compte' => $compte,
         ]);
     }
@@ -72,7 +85,7 @@ class CompteController extends AbstractController
             return $this->redirectToRoute('compte_index');
         }
 
-        return $this->render('compte/edit.html.twig', [
+        return $this->render('admin/compte/edit.html.twig', [
             'compte' => $compte,
             'form' => $form->createView(),
         ]);

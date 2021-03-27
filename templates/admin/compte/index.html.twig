@@ -1,39 +1,81 @@
-{% extends 'base.html.twig' %}
+{% extends "admin/bars.html.twig" %} {% block contenpage %}
+<div class="container">
+  <div class="page-title">
+    <div class="title_left">
+      <h5>
+        {{ "backend.user.listing" | trans }}
+      </h5>
+    </div>
+  </div>
 
-{% block title %}Compte index{% endblock %}
+  <div class="clearfix"></div>
 
-{% block body %}
-    <h1>Compte index</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="x_panel">
+        <div class="x_title">
+          <h2>
+            {{ "backend.retrait.retrait_listing" | trans }}
+          </h2>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Montant_credit</th>
-                <th>Montant_debit</th>
+          <ul class="nav navbar-right panel_toolbox">
+            <li>
+              <a
+                href="{{ path('compte_new') }}"
+                class="btn btn-success text-white"
+                >Creer un Compte</a
+              >
+            </li>
+          </ul>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+          <div class="row">
+            <table
+              id="example"
+              class="display table table-striped table-bordered dataminetables"
+            >
+              <thead>
+                <th>Montant Débit</th>
+                <th>Crédit</th>
                 <th>Solde</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for compte in comptes %}
-            <tr>
-                <td>{{ compte.id }}</td>
-                <td>{{ compte.montantCredit }}</td>
-                <td>{{ compte.montantDebit }}</td>
-                <td>{{ compte.solde }}</td>
-                <td>
-                    <a href="{{ path('compte_show', {'id': compte.id}) }}">show</a>
-                    <a href="{{ path('compte_edit', {'id': compte.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                <th>Proprietaire</th>
+                {% if is_granted("ROLE_SUPERUSER") %}
+                <th>{{ "backend.user.modifier" | trans }}</th>
 
-    <a href="{{ path('compte_new') }}">Create new</a>
+                <th>{{ "backend.user.delete" | trans }}</th>
+                {% endif %}
+              </thead>
+              <tbody>
+                {% for compte in comptes  %}
+                <tr>
+                  <td>{{ compte.montantCredit }}</td>
+                  <td>{{ compte.montantDebit }}</td>
+                  <td>{{ compte.solde }}</td>
+				  <td>{{ compte.userCompte.nomComplet }}</td>
+                  
+                  {% if is_granted("ROLE_SUPERUSER") %}
+                  <td>
+                    <a
+                      class="btn btn-primary"
+                      href="{{ path('compte_edit', { id: compte.id }) }}"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </a>
+                  </td>
+
+                  <td>
+                    {{ include("admin/compte/_delete_form.html.twig") }}
+                  </td>
+                  {% endif %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

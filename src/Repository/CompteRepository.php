@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Compte;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Compte|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,6 +18,16 @@ class CompteRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Compte::class);
+    }
+    
+    public function findByUser(User $user){
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.user_compte = :val')
+            ->setParameter('val', $user->getId())
+            ->orderBy('c.id', 'ASC')
+            ->setMaxResults(2)
+            ->getQuery()
+            ->getResult();
     }
 
     // /**

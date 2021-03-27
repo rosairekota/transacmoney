@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\Depot;
+use App\Entity\Search;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -29,14 +30,37 @@ class DepotRepository extends ServiceEntityRepository
     
     public function findByEmail(int $id)
     {
-        return $this->createQueryBuilder('d')
+        return $this->getQueryBuilder()
             ->andWhere('d.user_depot= :val')
             ->setParameter('val', $id)
+            ->orderBy('d.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    public function findSecretCodeByOrm(Search $search)
+    {      
+        return $this->getQueryBuilder()
+             ->andWhere('d.codeDepot= :code_depot')
+            ->setParameter('code_depot',$search->code_secret)
             ->orderBy('d.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
+    }
+    
+    public function findSecretCodeBySql($datas)
+    {
+        
+            $con=$this->em->getConnection();
+             $sql="SELECT * FROM depot d
+             WHERE d.code_depot=:code_depot";
+        
+            $stmt=$con->prepare($sql);
+            $stmt->execute($datas);
+           return $stmt->fetchAllAssociative();
+        
     }
     public function selectByIdSql($datas)
     {
@@ -49,7 +73,10 @@ class DepotRepository extends ServiceEntityRepository
            return $stmt->fetchAllAssociative();
         
     }
-
+  
+    private function getQueryBuilder(){
+        return $this->createQueryBuilder('d');
+    }
     /*
     public function findOneBySomeField($value): ?Depot
     {

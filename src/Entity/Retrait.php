@@ -36,7 +36,7 @@ class Retrait
     private $date_retrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Depot::class, inversedBy="retraits")
+     * @ORM\ManyToOne(targetEntity=Depot::class, inversedBy="retraits",cascade={"persist"})
      */
     private $depot;
 
@@ -46,7 +46,7 @@ class Retrait
     private $beneficiaire_piece_type;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $beneficiaire_piece_image;
 
