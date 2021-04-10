@@ -26,7 +26,7 @@ class Depot
     private $id;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=0)
+     * @ORM\Column(type="float")
      */
     private $montant;
 
@@ -46,7 +46,7 @@ class Depot
     private $codeDepot;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="depots")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="depots",cascade={"persist"})
      */
     private $user_depot;
 
@@ -56,7 +56,7 @@ class Depot
     private $date_depot;
 
     /**
-     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="depots")
+     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="depots",cascade={"persist"})
      */
     private $ville;
 
@@ -73,7 +73,7 @@ class Depot
     public function __construct()
     {
         $this->retraits = new ArrayCollection();
-        $this->date_depot=new DateTime();
+        $this->date_depot = new DateTime();
     }
 
     public function getId(): ?int
@@ -199,8 +199,8 @@ class Depot
 
     /**
      * Get the value of user_depot
-     */ 
-    public function getUser_depot():?User
+     */
+    public function getUser_depot(): ?User
     {
         return $this->user_depot;
     }
@@ -209,7 +209,7 @@ class Depot
      * Set the value of user_depot
      *
      * @return  self
-     */ 
+     */
     public function setUser_depot(?User $user_depot)
     {
         $this->user_depot = $user_depot;

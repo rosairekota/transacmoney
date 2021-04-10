@@ -17,23 +17,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  * @Route("/admin/depot")
  */
 class DepotController extends AbstractController
-{    private $user_email;
-    
+{
+    private $user_email;
+
     /**
      * @Route("/{user_email}-@j9a8j7k94", name="depot_index", methods={"GET"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function index(DepotRepository $depotRepository,$user_email,UserRepository $userRepo): Response
-    {   $this->user_email=$user_email;
-        if ($user_email=='admin@transacmoney.com') {
-            $depots=$depotRepository->findAll();
-        }
-        else{
-            $user=$userRepo->findOneByUsernameOrEmail($user_email);
-            $depots=$depotRepository->findByEmail($user->getId());
+    public function index(DepotRepository $depotRepository, $user_email, UserRepository $userRepo): Response
+    {
+        $this->user_email = $user_email;
+        if ($user_email == 'admin@transacmoney.com') {
+            $depots = $depotRepository->findAll();
+        } else {
+            $user = $userRepo->findOneByUsernameOrEmail($user_email);
+            $depots = $depotRepository->findByEmail($user->getId());
             //$depots=$depotRepository->selectByIdSql(['id'=>$user->getId()]);
-           
-            
+
+
         }
         return $this->render('admin/depot/index.html.twig', [
             'depots' =>  $depots,
@@ -44,41 +45,53 @@ class DepotController extends AbstractController
      * @Route("/new/{user_email}-@j9a8j7k94", name="depot_new", methods={"GET","POST"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function new($user_email,Request $request,UserRepository $userRepo): Response
+    public function new($user_email, Request $request, UserRepository $userRepo): Response
     {
-        $account=new Compte();
-        $user=$userRepo->findOneByUsernameOrEmail($user_email);
-       
+        $account = new Compte();
+        $user = $userRepo->findOneByUsernameOrEmail($user_email);
+
         $depot = new Depot();
         $form = $this->createForm(DepotType::class, $depot);
         $form->handleRequest($request);
-        
+
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $montantCommission=$depot->getMontant()*0.02;
-            $montantReel=$depot->getMontant()-$montantCommission;
-            $depot->setMontant($montantReel);
-            $codeSecret=str_shuffle($depot->getExpediteur()->getTelephone());
-            $depot->setMontantCommission($montantCommission);
+
+            dd($depot);
+            $montantCommission = $depot->getMontant() * 0.02;
+            $montantReel = intval($depot->getMontant()) - $montantCommission;
+
+            $depot->setMontant(round($montantReel));
+            $codeSecret = str_shuffle($depot->getExpediteur()->getTelephone());
+            $entityManager = $this->getDoctrine()->getManager();
             $depot->setCodeDepot($codeSecret);
             $depot->setUser_depot($user);
 
-            $entityManager = $this->getDoctrine()->getManager();
+            // recherche role user
+            if ($user->getRoles()[0] == 'ROLE_WRITER') {
+                $salaireSurCommission = $montantCommission * 0.005;
 
-            $entityManager->persist($depot);
+                $montantCommissionApres = floor($montantCommission) - $salaireSurCommission;
+                $depot->setMontantCommission($montantCommissionApres);
 
-              // recherche role user
-             if ($user->getRoles()[0]=='ROLE_WRITER') {
-                 $account->setMontantCredit(0);
-                 $account->setMontantDebit($montantCommission*0.5);
-                 $account->setSolde( $account->getMontantDebit()-$account->getMontantCredit());
-                 $account->setUserCompte($user);
-                 $entityManager->persist($account);
-             }
+                $account->setMontantCredit(0);
+                $account->setMontantDebit($salaireSurCommission);
+
+                $account->setSolde(floatval($account->getMontantDebit() - $account->getMontantCredit()));
+                $account->setUserCompte($user);
+
+                $entityManager->persist($account);
+                $entityManager->persist($depot);
+            } else {
+                $depot->setMontantCommission(floor($montantCommission));
+                $entityManager->persist($depot);
+            }
+
+
             $entityManager->flush();
-            $this->addFlash('success','Le Dépot a été effectué avce succès');
+            $this->addFlash('success', 'Le Dépot a été effectué avce succès');
 
-            return $this->redirectToRoute('depot_index',['user_email'=>$user_email]);
+            return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
         }
 
         return $this->render('admin/depot/new.html.twig', [
@@ -102,7 +115,7 @@ class DepotController extends AbstractController
      * @Route("/{id}/edit/{user_email}-@j9a8j7k94", name="depot_edit", methods={"GET","POST"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function edit(Request $request, Depot $depot,$user_email): Response
+    public function edit(Request $request, Depot $depot, $user_email): Response
     {
         $form = $this->createForm(DepotType::class, $depot);
         $form->handleRequest($request);
@@ -110,7 +123,7 @@ class DepotController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('depot_index',['user_email'=>$user_email]);
+            return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
         }
 
         return $this->render('admin/depot/edit.html.twig', [
@@ -123,14 +136,14 @@ class DepotController extends AbstractController
      * @Route("/{id}/{user_email}-@j9a8j7k94", name="depot_delete", methods={"DELETE"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function delete(Request $request, Depot $depot,$user_email): Response
+    public function delete(Request $request, Depot $depot, $user_email): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$depot->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $depot->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($depot);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('depot_index',['user_email'=>$user_email]);
+        return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
     }
 }

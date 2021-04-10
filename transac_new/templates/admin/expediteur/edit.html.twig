@@ -1,0 +1,10 @@
+{% extends "admin/bars.html.twig" %}
+
+{% block contenpage %}
+    <div class="container">
+        <h1>{{ "backend.expediteur.edit"|trans }}</h1>
+
+        {{ include('admin/expediteur/_form.html.twig', {'button_label': 'Editer'}) }}
+
+    </div>
+{% endblock %}

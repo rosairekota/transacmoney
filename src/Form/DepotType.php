@@ -18,20 +18,31 @@ class DepotType extends AbstractType
     {
         $builder
             ->add('montant')
-            ->add('expediteur',EntityType::class,[
-                'class'         =>Expediteur::class,
-                'choice_label'  =>'nom']
+            ->add(
+                'expediteur',
+                EntityType::class,
+                [
+                    'class'         => Expediteur::class,
+                    'choice_label'  => 'nom'
+                ]
             )
-            ->add('beneficiaire',EntityType::class,[
-                'class'         =>Beneficiaire::class,
-                'choice_label'  =>'nom']
-                )
-            
-            ->add('ville',EntityType::class,[
-                'class'         =>City::class,
-                'choice_label'  =>'name']
-                )
-        ;
+            ->add(
+                'beneficiaire',
+                EntityType::class,
+                [
+                    'class'         => Beneficiaire::class,
+                    'choice_label'  => 'nom'
+                ]
+            )
+
+            ->add(
+                'ville',
+                EntityType::class,
+                [
+                    'class'         => City::class,
+                    'choice_label'  => 'name'
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

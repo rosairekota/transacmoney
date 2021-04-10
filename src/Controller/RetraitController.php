@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Depot;
+use App\Entity\Compte;
 use App\Entity\Search;
 use App\Entity\Retrait;
 use App\Form\SearchType;
@@ -35,18 +36,17 @@ class RetraitController extends AbstractController
      * @Route("/@j9a8j7k94.@{user_email}-j7k", name="retrait_index", methods={"GET|POST"})
      *  @IsGranted("ROLE_WRITER")
      */
-    public function index($user_email,RetraitRepository $retraitRepository,UserRepository $userRepo, Request $request): Response
+    public function index($user_email, RetraitRepository $retraitRepository, UserRepository $userRepo, Request $request): Response
     {
-        $this->user_email=$user_email;
-        if ($user_email=='admin@transacmoney.com') {
-            $retraits=$retraitRepository->findAll();
-        }
-        else{
-            $user=$userRepo->findOneByUsernameOrEmail($user_email);
-            $retraits=$retraitRepository->findByEmail($user->getId());
+        $this->user_email = $user_email;
+        if ($user_email == 'admin@transacmoney.com') {
+            $retraits = $retraitRepository->findAll();
+        } else {
+            $user = $userRepo->findOneByUsernameOrEmail($user_email);
+            $retraits = $retraitRepository->findByEmail($user->getId());
             //$depots=$depotRepository->selectByIdSql(['id'=>$user->getId()]);
-           
-            
+
+
         }
         return $this->render('admin/retrait/index.html.twig', [
             'retraits' => $retraits,
@@ -78,6 +78,7 @@ class RetraitController extends AbstractController
                 $depotSession = ['depot' => $depot];
 
                 $this->session->set('depotSession', $depotSession);
+                return $this->redirectToRoute('retrait_preview', ['id' => $depot[0]->getId()]);
             } else {
                 $this->addFlash('danger', "$search->code_secret est invalide! retrait non autorisé !");
             }
@@ -89,11 +90,26 @@ class RetraitController extends AbstractController
         ]);
     }
     /**
+     * @Route("/previsualisation/{id}", name="retrait_preview", methods={"GET","POST"})
+     *  @IsGranted("ROLE_WRITER")
+     */
+    public function previewInfoRetrait(Depot $depot)
+    {
+        $this->addFlash('success', "Code valide. Effectuer le retrait");
+        return $this->render('admin/retrait/preview.html.twig', [
+            'depot'     => $depot,
+        ]);
+    }
+    /**
      * @Route("/new/{user_email}", name="retrait_new", methods={"GET","POST"})
      *  @IsGranted("ROLE_WRITER")
      */
-    public function new($user_email, Request $request, RetraitRepository $retraitRepository,UserRepository $userRepo): Response
+    public function new($user_email, Request $request, RetraitRepository $retraitRepository, UserRepository $userRepo, DepotRepository $depoRepo): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $account = new Compte();
+        $depoUpdate = null;
+        // on recupere le depot courant dans la session;
         $depotSession = $this->session->get('depotSession', []);
         $datas = [];
         $retrait = new Retrait();
@@ -106,7 +122,6 @@ class RetraitController extends AbstractController
             $user = $userRepo->findOneByUsernameOrEmail($user_email);
 
             $retrait->setDepot($depotSession['depot'][0]);
-           
             $datas = [
                 "depot_id" => $depotSession['depot'][0]->getId(),
                 "user_retrait_id" => $user->getId(),
@@ -116,11 +131,41 @@ class RetraitController extends AbstractController
                 "libelle" => $retrait->getLibelle(),
                 "code_retrait" => $retrait->getCodeRetrait()
             ];
+            $montantCommission = $depotSession['depot'][0]->getMontantCommission();
+            // recherche role user
+            if ($user->getRoles()[0] == 'ROLE_WRITER') {
+
+                $salaireSurCommission = round($montantCommission * 0.005, 3);
+
+                $montantCommissionApres = floor($montantCommission - $salaireSurCommission);
+
+                $depotSession['depot'][0]->setMontantCommission($montantCommissionApres);
+
+                $depoUpdate = $depoRepo->updateAmountBySql(
+                    [
+                        'montant' => $montantCommissionApres,
+                        'code_depot' => $retrait->getCodeRetrait()
+                    ]
+                );
+
+                if (!empty($depoUpdate)) {
+                    $account->setMontantCredit(0);
+                    $account->setMontantDebit($salaireSurCommission);
+
+                    $account->setSolde(floatval($account->getMontantDebit() - $account->getMontantCredit()));
+                    $account->setUserCompte($user);
+
+                    $entityManager->persist($account);
+                    $entityManager->flush();
+                }
+            }
             $retraitRepository->insertBySql($datas);
             unset($depotSession);
-           
 
-            return $this->redirectToRoute('retrait_index');
+
+
+
+            return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
         }
 
         return $this->render('admin/retrait/new.html.twig', [
@@ -152,7 +197,7 @@ class RetraitController extends AbstractController
             unset($depotSession);
             session_destroy();
 
-            return $this->redirectToRoute('retrait_index');
+            return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
         }
 
         return $this->render('admin/retrait/new.html.twig', [
@@ -193,10 +238,10 @@ class RetraitController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="retrait_delete", methods={"DELETE"})
+     * @Route("/{id}/{user_email}-@j9a8j7k94", name="retrait_delete", methods={"DELETE"})
      *  @IsGranted("ROLE_WRITER")
      */
-    public function delete(Request $request, Retrait $retrait): Response
+    public function delete($user_email, Request $request, Retrait $retrait): Response
     {
         if ($this->isCsrfTokenValid('delete' . $retrait->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -204,6 +249,6 @@ class RetraitController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('retrait_index');
+        return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
     }
 }

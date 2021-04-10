@@ -18,17 +18,17 @@ class Compte
     private $id;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=0, nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $montant_credit;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=0, nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $montant_debit;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=0, nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $solde;
 

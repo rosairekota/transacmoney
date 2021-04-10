@@ -1,0 +1,87 @@
+{% extends "admin/bars.html.twig" %}
+
+{% block contenpage %}
+	<div class="container">
+		<div class="page-title">
+			<div class="title_left">
+				<h5>
+					{{ "backend.user.listing"|trans }}
+				</h5>
+			</div>
+		</div>
+
+		<div class="clearfix"></div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="x_panel">
+					<div class="x_title">
+						<h2>
+							{{ "backend.expediteur.expediteur_listing"|trans }}</h2>
+						<ul class="nav navbar-right panel_toolbox">
+							<li>
+								<a href="{{ path('expediteur_newSimple') }}" class="btn btn-success">CREER</a>
+							</li>
+						</ul>
+						<div class="clearfix"></div>
+					</div>
+					<div class="x_content">
+						<div class="row">
+							<form action="{{ path('app_admin_groupaction_user') }}" id="grpaction" method="post" name="grpaction">
+								<div class="form-group form-inline">
+									<select class="form-control" name="action" required id="action_select">
+										<option value="">
+											{{ "backend.user.group_actions"|trans }}</option>
+										<option value="{{"backend.user.deactivate"|trans }}">
+											{{ "backend.user.deactivate"|trans }}</option>
+										<option value="{{"backend.user.Activate"|trans }}">
+											{{ "backend.user.Activate"|trans }}</option>
+										<option value="{{"backend.user.delete"|trans }}">
+											{{ "backend.user.delete"|trans }}</option>
+									</select>
+									<button class="btn btn-primary" type="submit">Go!!</button>
+								</div>
+
+							</form>
+							<table id="example" class="display table table-striped table-bordered dataminetables">
+								<thead>
+									<th><input type="checkbox" id="select_all" name="select_all"></th>
+									<th>Nom</th>
+                                    <th>Postnom</th>
+                                    <th>Prenom</th>
+                                    <th>Telephone</th>
+									<th>{{ "backend.user.modifier"|trans }}</th>
+
+                                    {% if is_granted("ROLE_SUPERUSER") %}
+									<th>{{ "backend.user.delete"|trans }}</th>
+                                    {% endif %}
+								</thead>
+								<tbody>
+                                    {% for expediteur in expediteurs %}
+										<tr>
+											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{ expediteur.id }}"></td>
+                                            <td>{{ expediteur.nom }}</td>
+                                            <td>{{ expediteur.postnom }}</td>
+                                            <td>{{ expediteur.prenom }}</td>
+                                            <td>{{ expediteur.telephone }}</td>
+											<td>
+												<a class="btn btn-primary" href="{{ path('expediteur_edit', {'id': expediteur.id}) }}">
+													<i class="fa fa-edit"></i>
+												</a>
+											</td>
+                                            
+											<td>
+                                                {{ include('admin/expediteur/_delete_form.html.twig') }}
+											</td>
+                                        
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

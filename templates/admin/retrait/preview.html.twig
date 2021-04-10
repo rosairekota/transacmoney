@@ -1,0 +1,86 @@
+{% extends "admin/bars.html.twig" %}
+
+{% block contenpage %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
+<div class="body bg-default">
+    <div class="main-content">
+
+        <div class="mt-4 mx-3">
+            <div class="x_panel">
+                <div class="card card-stats mb-4 mb-xl-0">
+                    <div class="card-body">
+                        <div class="row">
+                            {% for label, messages in app.flashes(['danger', 'info','success']) %}
+                            {% for message in messages %}
+
+                            <div class="col-sm-6 offset-sm-3 alert alert-{{ label }}"> {{ message }} </div>
+
+                            {% endfor %}
+                            {% endfor %}
+                            <div class="col-md-12">
+                                <h5 class="card-title text-muted mb-0 h2 font-weight-bold text-center mb-4">Information
+                                    sur la transaction</h5>
+                            </div>
+
+
+                            <table class="col-md-12">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3" class="text-center">Transfert D'argent</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr class="mb-2">
+                                        <td rowspan="2"> <strong>Date:{{depot.dateDepot|date("m/d/Y,h:i")}}</strong>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Taux:2000FC</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Expediteur: &nbsp;{{depot.expediteur.prenom}}-
+                                                {{depot.expediteur.nom}}</strong></td>
+                                        <td><strong class="text-danger">Code: {{depot.codeDepot}} </strong></td>
+                                        <td><strong>Beneficiaire: &nbsp;
+                                                {{depot.beneficiaire.prenom}}-{{depot.beneficiaire.nom}}
+                                            </strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ville :{{depot.user_depot.agence.city.name}}</strong></td>
+                                        <td><strong>Montant: &nbsp;{{depot.montant}} USD</strong></td>
+                                        <td><strong>Ville: &nbsp; {{depot.ville}}</strong></td>
+                                    </tr>
+
+                                </tbody>
+                                <tfoot>
+
+                                    <tr>
+                                        <td colspan="3" class="text-center mt-3"><em>Agence:
+                                                {{depot.user_depot.agence.name}}</em>
+                                        </td>
+                                    </tr>
+
+                                </tfoot>
+                            </table>
+
+
+                            <div class="col-md-4 offset-md-4 col-sm-12">
+                                <a class="btn btn-primary btn-lg text-white mt-4"
+                                    href="{{ path('retrait_new',{'user_email':app.user.email}) }}">Effectuer le
+                                    retrait</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page content -->
+    </div>
+</div>
+
+
+{% endblock %}

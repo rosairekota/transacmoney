@@ -1,0 +1,62 @@
+
+<div class="container">
+    <div class="page-title">
+        <div class="title_left">
+            <h5><a href="{{ path('beneficiaire_index') }} }}">voir {{ "backend.depot.depot_listing"|trans }}</a> &gt;&gt; </h5>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Formulaire</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    {{ form_start(form) }}
+                    {{ form_row(form.montant) }}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(form.expediteur) }}
+                        </div>
+                        <div class="col-sm-6 mt-4">
+                           <a href="{{ path('expediteur_new',{'user_email':app.user.email}) }}" class="btn btn-primary">Créer un nouveau Expediteur</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ form_row(form.beneficiaire) }}
+                         </div>
+                        
+                        <div class="col-sm-6 mt-4">
+                            <a href="{{ path('beneficiaire_depot',{'user_email':app.user.email}) }}" class="btn btn-primary">Créer un nouveau Bénéficiaire</a>
+                         </div>
+                         </div>
+                    </div>
+                    {{ form_row(form.ville) }}
+                    
+                    <div class="ln_solid"></div>
+                    <div class="item form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                            <a class="btn btn-warning" href="{{ path('app_admin_index') }}">{{ "backend.user.cancel"|trans }}</a>
+                            <button type="submit" name="valider" class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

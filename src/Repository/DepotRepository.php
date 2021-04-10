@@ -18,16 +18,16 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class DepotRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $em;
-    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $em)
     {
         parent::__construct($registry, Depot::class);
-        $this->em=$em;
+        $this->em = $em;
     }
 
     // /**
     //  * @return Depot[] Returns an array of Depot objects
     //  */
-    
+
     public function findByEmail(int $id)
     {
         return $this->getQueryBuilder()
@@ -35,46 +35,65 @@ class DepotRepository extends ServiceEntityRepository
             ->setParameter('val', $id)
             ->orderBy('d.id', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
     public function findSecretCodeByOrm(Search $search)
-    {      
+    {
         return $this->getQueryBuilder()
-             ->andWhere('d.codeDepot= :code_depot')
-            ->setParameter('code_depot',$search->code_secret)
+            ->andWhere('d.codeDepot= :code_depot')
+            ->setParameter('code_depot', $search->code_secret)
             ->orderBy('d.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
-    
+
     public function findSecretCodeBySql($datas)
     {
-        
-            $con=$this->em->getConnection();
-             $sql="SELECT * FROM depot d
+
+        $con = $this->em->getConnection();
+        $sql = "SELECT * FROM depot d
              WHERE d.code_depot=:code_depot";
-        
-            $stmt=$con->prepare($sql);
-            $stmt->execute($datas);
-           return $stmt->fetchAllAssociative();
-        
+
+        $stmt = $con->prepare($sql);
+        $stmt->execute($datas);
+        return $stmt->fetchAllAssociative();
+    }
+    public function updateAmountBySql($datas)
+    {
+
+        $con = $this->em->getConnection();
+        $sql = "UPDATE depot d
+              SET d.montant_commission=:montant
+             WHERE d.code_depot=:code_depot";
+
+        $con->prepare($sql);
+        $result = $con->executeQuery($sql, $datas);
+        return $result;
+    }
+    public function findSumDepotsBySql($table, $attribute)
+    {
+
+        $con = $this->em->getConnection();
+        $sql = "SELECT SUM({$attribute}) as somme FROM {$table} d
+             ";
+
+        $stmt = $con->executeQuery($sql);
+        return $stmt->fetchAll();
     }
     public function selectByIdSql($datas)
     {
-            $con=$this->em->getConnection();
-             $sql="SELECT * FROM depot d
+        $con = $this->em->getConnection();
+        $sql = "SELECT * FROM depot d
              WHERE d.user_depot_id=:id";
-        
-            $stmt=$con->prepare($sql);
-            $stmt->execute($datas);
-           return $stmt->fetchAllAssociative();
-        
+
+        $stmt = $con->prepare($sql);
+        $stmt->execute($datas);
+        return $stmt->fetchAllAssociative();
     }
-  
-    private function getQueryBuilder(){
+
+    private function getQueryBuilder()
+    {
         return $this->createQueryBuilder('d');
     }
     /*

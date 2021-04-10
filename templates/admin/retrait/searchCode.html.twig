@@ -3,64 +3,46 @@
 {% block contenpage %}
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
- <style>
-    .color-yellow{
-        color:rgb(154, 190, 35)!important;
-        font-style: italic;
-        font-size: 18px;
-        color: blue;
-      }
-      .color-yellow:hover{
-        color:rgb(250, 250, 250)!important;
-        font-style: italic;
-        font-size: 18px;
-      }
- </style>
 <div class="body bg-default">
   <div class="main-content">
-   
-      <div class="mt-4 mx-3">
-        <div class="x_panel">
-            <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <h5 class="card-title text-muted mb-0 h2 font-weight-bold text-center mb-4">Verification du Code</h5>
-                    </div>
-                  <div class="col-sm-12">
-                    <div class=" row">
-                    {% for label, messages in app.flashes(['danger', 'info','success']) %}
-                    {% for message in messages %}
-                        
-                        <div class="col-sm-6 alert alert-{{ label }}"> {{ message }} </div>
-                        <div class="col-sm-6">
-                           {% if label == 'info' %}
-                            &nbsp;&nbsp; &nbsp;<span class="alert alert-{{ label }} ml-5 mt-4"><a href="{{ path('retrait_new',{'user_email':app.user.email}) }}" class="btn-content">{{response}}</a> </span>
-                            {% endif %}
-                        </div>
-                            
-                    {% endfor %}
-                     
-                 {% endfor %}
-                    </div>
-                  </div>
-                  <div class="col-sm-6 offset-sm-3 mt-5 mb-0 text-muted text-sm text-center text-white">
-                   
-                        {{ form_start(form,{'action':path('retrait_search')}) }}
-                        {{ form_row(form.code_secret,{'label':false,'attr':{'class':'mb-3 form-control rounded-6'}}) }}
-                            
-                        <button class="btn btn-danger btn-danger btn-lg text-white" type="submit">Verifier</button>
-                        {{ form_end(form) }}
-                  </div>
-                </div>
+
+    <div class="mt-4 mx-3">
+      <div class="x_panel">
+        <div class="card card-stats mb-4 mb-xl-0">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12">
+                <h5 class="card-title text-muted mb-0 h2 font-weight-bold text-center mb-4">Verification du Code</h5>
+              </div>
+              <div class="col-sm-12">
+                <div class=" row">
+                  {% for label, messages in app.flashes(['danger', 'info','success']) %}
+                  {% for message in messages %}
+
+                  <div class="col-sm-6 alert alert-{{ label }}"> {{ message }} </div>
+
+                  {% endfor %}
+
+                  {% endfor %}
                 </div>
               </div>
+              <div class="col-sm-6 offset-sm-3 mt-5 mb-0 text-muted text-sm text-center text-white">
+
+                {{ form_start(form,{'action':path('retrait_search')}) }}
+                {{ form_row(form.code_secret,{'label':false,'attr':{'class':'mb-3 form-control rounded-6'}}) }}
+
+                <button class="btn btn-danger btn-danger btn-lg text-white" type="submit">Verifier</button>
+                {{ form_end(form) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    
+    </div>
+
     <!-- Page content -->
   </div>
- </div>
+</div>
 
-   
+
 {% endblock %}
