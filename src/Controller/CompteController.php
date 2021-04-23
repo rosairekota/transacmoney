@@ -50,19 +50,19 @@ class CompteController extends AbstractController
     }
 
     /**
-     * @Route("/xb@h/{user_email}", name="compte_show", methods={"GET"})
+     * @Route("/@j9a8j7k94.@{user_email}-@j9a8j7k94.@", name="compte_show", methods={"GET"})
      */
-    public function showByUser($user_email,UserRepository $userRepository,CompteRepository $compte): Response
+    public function showByUser($user_email, UserRepository $userRepository, CompteRepository $compte): Response
     {
-        $user=$userRepository->findOneByUsernameOrEmail($user_email);
-       
+        $user = $userRepository->findOneByUsernameOrEmail($user_email);
+
         return $this->render('admin/compte/show.html.twig', [
-            'comptes' => $compte->findSumAccountBySql(['id'=>$user->getId()]),
+            'comptes' => $compte->findSumAccountBySql(['id' => $user->getId()]),
         ]);
     }
-    
+
     /**
-     * @Route("/xb@h/{id}", name="compte_show_two", methods={"GET"})
+     * @Route("/@j9a8j7k94.@{id}-@j9a8j7k94.@", name="compte_show_two", methods={"GET"})
      */
     public function show(Compte $compte): Response
     {
@@ -96,7 +96,7 @@ class CompteController extends AbstractController
      */
     public function delete(Request $request, Compte $compte): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$compte->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $compte->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($compte);
             $entityManager->flush();

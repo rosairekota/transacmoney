@@ -57,7 +57,7 @@ class DepotController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            dd($depot);
+
             $montantCommission = $depot->getMontant() * 0.02;
             $montantReel = intval($depot->getMontant()) - $montantCommission;
 

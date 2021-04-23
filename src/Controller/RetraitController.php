@@ -101,7 +101,7 @@ class RetraitController extends AbstractController
         ]);
     }
     /**
-     * @Route("/new/{user_email}", name="retrait_new", methods={"GET","POST"})
+     * @Route("/new/@j9a8j7k94.@{user_email}-j7k", name="retrait_new", methods={"GET","POST"})
      *  @IsGranted("ROLE_WRITER")
      */
     public function new($user_email, Request $request, RetraitRepository $retraitRepository, UserRepository $userRepo, DepotRepository $depoRepo): Response

@@ -187,6 +187,9 @@
             "./config/packages/security_checker.yaml"
         ]
     },
+    "spipu/html2pdf": {
+        "version": "v5.2.2"
+    },
     "stof/doctrine-extensions-bundle": {
         "version": "1.2",
         "recipe": {
@@ -546,6 +549,9 @@
         "files": [
             "config/packages/reset_password.yaml"
         ]
+    },
+    "tecnickcom/tcpdf": {
+        "version": "6.4.1"
     },
     "twig/extra-bundle": {
         "version": "v3.0.3"
