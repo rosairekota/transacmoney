@@ -20,21 +20,14 @@
 
           <ul class="nav navbar-right panel_toolbox">
             <li>
-              <a
-                href="{{ path('compte_new') }}"
-                class="btn btn-success text-white"
-                >Creer un Compte</a
-              >
+              <a href="{{ path('compte_new') }}" class="btn btn-success text-white">Creer un Compte</a>
             </li>
           </ul>
           <div class="clearfix"></div>
         </div>
         <div class="x_content">
           <div class="row">
-            <table
-              id="example"
-              class="display table table-striped table-bordered dataminetables"
-            >
+            <table id="example" class="display table table-striped table-bordered dataminetables">
               <thead>
                 <th>Montant Débit</th>
                 <th>Crédit</th>
@@ -47,19 +40,17 @@
                 {% endif %}
               </thead>
               <tbody>
-                {% for compte in comptes  %}
+                {% for compte in comptes %}
                 <tr>
-                  <td>{{ compte.montantCredit }}</td>
                   <td>{{ compte.montantDebit }}</td>
+                  <td>{{ compte.montantCredit }}</td>
                   <td>{{ compte.solde }}</td>
-				  <td>{{ compte.userCompte.nomComplet }}</td>
-                  
+                  <td><a href="{{ path('compte_show',{'user_email':compte.userCompte.email})}}" class="text-primary">{{
+                      compte.userCompte.nomComplet }}</a></td>
+
                   {% if is_granted("ROLE_SUPERUSER") %}
                   <td>
-                    <a
-                      class="btn btn-primary"
-                      href="{{ path('compte_edit', { id: compte.id }) }}"
-                    >
+                    <a class="btn btn-primary" href="{{ path('compte_edit', { id: compte.id }) }}">
                       <i class="fa fa-edit"></i>
                     </a>
                   </td>

@@ -3,31 +3,48 @@
   <div class="card card-stats mb-4 mb-xl-0">
     <div class="card-body">
       <div class="row">
+
+
         <div class="col">
-          <h5
-            class="card-title text-uppercase text-muted mb-0 h2 font-weight-bold text-center"
-          >
+          <h5 class="card-title text-uppercase text-muted mb-0 h2 font-weight-bold text-center">
             Mon Compte
           </h5>
         </div>
       </div>
-       <div class="row">
+      <div class="row">
         {% for compte in comptes %}
-           <div class="col-sm-4 alert alert-success img-thumbnail">
+        {% set col=6 %}
+        {% if compte.commission > 0 %}
+        <div class="col-sm-4 alert alert-info img-thumbnail">
+          <h6 class="card-title">Mes Commissions</h6>
+
+          <td>{{ compte.commission }} $</td>
+        </div>
+        {% else %}
+        {% set col=12 %}
+        {% endif %}
+
+        <div class="col-sm-{{col}} ml-2 p-3 alert bg-dark img-thumbnail">
+          <div class="row">
+            <div class="col-sm-3 alert alert-info img-thumbnail ml-2">
               <h6 class="card-title">Débit</h6>
-             
-            <td>{{ compte.debit }} $</td>
-           </div>
-           <div class="col-sm-4 img-thumbnail">
-            <h6 class="card-title">Crédit</h6>
-           <td>{{ compte.credit }} $</td>
-           </div>
-           <div class="col-sm-4 alert alert-info img-thumbnail">
-            <h6 class="card-title">Solde</h6>
-            <td>{{ compte.debit - compte.credit }} $</td>
-           </div>
-           {% endfor %}
-       </div>
+
+              <td>{{ compte.debit }} $</td>
+            </div>
+            <div class="col-sm-3 alert alert-primary img-thumbnail ml-2">
+              <h6 class="card-title">Crédit</h6>
+              <td>{{ compte.credit }} $</td>
+            </div>
+            <div class="col-sm-3 alert alert-info img-thumbnail ml-2">
+              <h6 class="card-title">Solde</h6>
+              <td>{{ compte.debit - compte.credit }} $</td>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+
     </div>
   </div>
 </div>

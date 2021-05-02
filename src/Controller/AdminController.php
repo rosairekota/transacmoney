@@ -19,15 +19,15 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin",name="app_admin_index")
      */
-    public function index(DepotRepository $depotRepository,AgenceRepository $agenceRepository,RetraitRepository $retraitRepository,UserRepository $userRepo){
-        
+    public function index(DepotRepository $depotRepository, AgenceRepository $agenceRepository, RetraitRepository $retraitRepository, UserRepository $userRepo)
+    {
 
-        return $this->render("admin/main.html.twig",[
-            'depots'=>$depotRepository->findSumDepotsBySql('depot','montant'),
-            'retraits'=>$depotRepository->findSumDepotsBySql('retrait','montant_retire'),
-            'agences'=>$agenceRepository->findAll(),
-            'users'=>$userRepo->findAll()
+
+        return $this->render("admin/main.html.twig", [
+            'depots' => $depotRepository->findSumDepotsBySql('depot', 'montant'),
+            'retraits' => $depotRepository->findSumDepotsBySql('retrait', 'montant_retire'),
+            'agences' => $agenceRepository->findAll(),
+            'commussions' => $depotRepository->findSumDepotsBySql('depot', 'montant_commission')
         ]);
     }
-
 }

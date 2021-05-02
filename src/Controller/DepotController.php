@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Compte;
 use App\Entity\Depot;
+use App\Entity\Compte;
 use App\Form\DepotType;
-use App\Repository\DepotRepository;
 use App\Repository\UserRepository;
+use App\Repository\DepotRepository;
+use App\Repository\CompteRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,53 +46,67 @@ class DepotController extends AbstractController
      * @Route("/new/{user_email}-@j9a8j7k94", name="depot_new", methods={"GET","POST"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function new($user_email, Request $request, UserRepository $userRepo): Response
+    public function new($user_email, Request $request, UserRepository $userRepo, CompteRepository $accountRepot): Response
     {
-        $account = new Compte();
+
         $user = $userRepo->findOneByUsernameOrEmail($user_email);
 
         $depot = new Depot();
         $form = $this->createForm(DepotType::class, $depot);
         $form->handleRequest($request);
-
+        $account = $accountRepot->findByUser($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-
-            $montantCommission = $depot->getMontant() * 0.02;
-            $montantReel = intval($depot->getMontant()) - $montantCommission;
-
-            $depot->setMontant(round($montantReel));
-            $codeSecret = str_shuffle($depot->getExpediteur()->getTelephone());
-            $entityManager = $this->getDoctrine()->getManager();
-            $depot->setCodeDepot($codeSecret);
-            $depot->setUser_depot($user);
-
-            // recherche role user
-            if ($user->getRoles()[0] == 'ROLE_WRITER') {
-                $salaireSurCommission = $montantCommission * 0.005;
-
-                $montantCommissionApres = floor($montantCommission) - $salaireSurCommission;
-                $depot->setMontantCommission($montantCommissionApres);
-
-                $account->setMontantCredit(0);
-                $account->setMontantDebit($salaireSurCommission);
-
-                $account->setSolde(floatval($account->getMontantDebit() - $account->getMontantCredit()));
-                $account->setUserCompte($user);
-
-                $entityManager->persist($account);
-                $entityManager->persist($depot);
+            if ($account[0]->getMontantDebit() < 0 || $account[0]->getMontantDebit() < $depot->getMontant()) {
+                if ($account[0]->getMontantDebit() < 0) {
+                    $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
+                } elseif ($account[0]->getMontantDebit() < $depot->getMontant()) {
+                    $this->addFlash("danger", "Dépot non autorisé. Votre caise est inferieur du montant du dépot. Veuillez contacter l'administrateur.");
+                }
             } else {
-                $depot->setMontantCommission(floor($montantCommission));
-                $entityManager->persist($depot);
+
+                //dd($account);
+                $montantCommission = $depot->getMontant() * 0.02;
+
+                $montantReel = $depot->getMontant() - floatval($montantCommission);
+
+                $depot->setMontant($montantReel > 100 ? round($montantReel) : $montantReel);
+                $codeSecret = str_shuffle($depot->getExpediteur()->getTelephone());
+                $entityManager = $this->getDoctrine()->getManager();
+                $depot->setCodeDepot($codeSecret);
+                $depot->setUser_depot($user);
+
+                $credit = $account[0]->getMontantDebit() - $depot->getMontant();
+
+                $account[0]->setMontantCredit($depot->getMontant() + $account[0]->getMontantCredit());
+                $account[0]->setMontantDebit(floor($credit));
+                $solde = (floatval($account[0]->getMontantDebit() - $account[0]->getMontantCredit()));
+                //dd($solde);
+                $account[0]->setSolde($solde <= 0 ? 0 : $solde);
+
+                // recherche role user
+                if ($user->getRoles()[0] == 'ROLE_WRITER') {
+                    $salaireSurCommission = round($montantCommission * 0.005, 3);
+
+                    $montantCommissionApres = $montantCommission - floor($salaireSurCommission);
+                    $depot->setMontantCommission($montantCommissionApres);
+
+                    $account[0]->setCommissionSousAgent($salaireSurCommission + $account[0]->getCommissionSousAgent());
+
+
+                    $entityManager->persist($depot);
+                } else {
+
+                    $depot->setMontantCommission($montantCommission);
+                    $entityManager->persist($depot);
+                }
+
+
+                $entityManager->flush();
+                $this->addFlash('success', 'Le Dépot a été effectué avce succès');
+
+                return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
             }
-
-
-            $entityManager->flush();
-            $this->addFlash('success', 'Le Dépot a été effectué avce succès');
-
-            return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
         }
 
         return $this->render('admin/depot/new.html.twig', [

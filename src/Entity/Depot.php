@@ -12,6 +12,7 @@ use App\Repository\DepotRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=DepotRepository::class)
@@ -27,6 +28,8 @@ class Depot
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotNull(message="pas de valeur null stp...")
+     * @Assert\Positive(message="le Montant doit être positive")
      */
     private $montant;
 

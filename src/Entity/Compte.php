@@ -37,6 +37,13 @@ class Compte
      */
     private $user_compte;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $commission_sous_agent;
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +93,18 @@ class Compte
     public function setUserCompte(?User $user_compte): self
     {
         $this->user_compte = $user_compte;
+
+        return $this;
+    }
+
+    public function getCommissionSousAgent(): ?float
+    {
+        return $this->commission_sous_agent;
+    }
+
+    public function setCommissionSousAgent(?float $commission_sous_agent): self
+    {
+        $this->commission_sous_agent = $commission_sous_agent;
 
         return $this;
     }

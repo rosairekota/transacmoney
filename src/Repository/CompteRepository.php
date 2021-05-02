@@ -17,13 +17,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class CompteRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $em;
-    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $em)
     {
         parent::__construct($registry, Compte::class);
-        $this->em=$em;
+        $this->em = $em;
     }
-    
-    public function findByUser(User $user){
+
+    public function findByUser(User $user)
+    {
         return $this->createQueryBuilder('c')
             ->andWhere('c.user_compte = :val')
             ->setParameter('val', $user->getId())
@@ -35,15 +36,14 @@ class CompteRepository extends ServiceEntityRepository
 
     public function findSumAccountBySql($datas)
     {
-        
-            $con=$this->em->getConnection();
-             $sql="SELECT SUM(montant_debit) as debit,SUM(montant_credit) as credit FROM compte d
+
+        $con = $this->em->getConnection();
+        $sql = "SELECT SUM(montant_debit) as debit,SUM(montant_credit) as credit,SUM(commission_sous_agent) as commission FROM compte d
              WHERE user_compte_id=:id";
-        
-        $stmt=$con->prepare($sql);
+
+        $stmt = $con->prepare($sql);
         $stmt->execute($datas);
-       return $stmt->fetchAll();
-        
+        return $stmt->fetchAll();
     }
     // /**
     //  * @return Compte[] Returns an array of Compte objects
