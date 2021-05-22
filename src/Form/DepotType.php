@@ -20,19 +20,11 @@ class DepotType extends AbstractType
             ->add('montant')
             ->add(
                 'expediteur',
-                EntityType::class,
-                [
-                    'class'         => Expediteur::class,
-                    'choice_label'  => 'nom'
-                ]
+                ExpediteurType::class
             )
             ->add(
                 'beneficiaire',
-                EntityType::class,
-                [
-                    'class'         => Beneficiaire::class,
-                    'choice_label'  => 'nom'
-                ]
+                BeneficiaireType::class
             )
 
             ->add(

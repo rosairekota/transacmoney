@@ -40,7 +40,7 @@ class Expediteur
     private $telephone;
 
     /**
-     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="expediteur")
+     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="expediteur",cascade={"persist"})
      */
     private $depots;
 

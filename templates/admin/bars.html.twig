@@ -75,7 +75,6 @@
                                         class="fa fa-clipboard"></i> Liste</a></li>
                         </ul>
                     </li>
-                    {% if is_granted("ROLE_SUPERUSER") %}
                     <li><a><i class="fa fa-folder-open"></i>{{ "backend.menu.account"|trans }}<span
                                 class="fa fa-chevron-down"></span></a>
                         {% if is_granted("ROLE_SUPERUSER") or is_granted("ROLE_SUPERUSER")%}
@@ -89,6 +88,19 @@
                                         class="fa fa-usd"></i> Consulter</a></li>
                         </ul>
                         {% endif %}
+                    </li {% if is_granted("ROLE_SUPERUSER") %} <li><a><i class="fa fa-folder-open"></i>{{
+                        "backend.menu.account"|trans }}<span class="fa fa-chevron-down"></span></a>
+                    {% if is_granted("ROLE_SUPERUSER") or is_granted("ROLE_SUPERUSER")%}
+                    <ul class="nav child_menu">
+                        <li><a href="{{ path('compte_index')}}"><i class="fa fa-usd"></i> {{
+                                "backend.account.compte_listing"|trans }}</a></li>
+                    </ul>
+                    {% else %}
+                    <ul class="nav child_menu">
+                        <li><a href="{{ path('compte_show',{'user_email':app.user.email})}}"><i class="fa fa-usd"></i>
+                                Consulter</a></li>
+                    </ul>
+                    {% endif %}
                     </li>
                     {% endif %}
                     {#

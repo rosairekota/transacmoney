@@ -34,12 +34,12 @@ class Depot
     private $montant;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Expediteur::class, inversedBy="depots")
+     * @ORM\ManyToOne(targetEntity=Expediteur::class, inversedBy="depots",cascade={"persist"})
      */
     private $expediteur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Beneficiaire::class, inversedBy="depots")
+     * @ORM\ManyToOne(targetEntity=Beneficiaire::class, inversedBy="depots",cascade={"persist"})
      */
     private $beneficiaire;
 
@@ -59,7 +59,7 @@ class Depot
     private $date_depot;
 
     /**
-     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="depots",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="depots")
      */
     private $ville;
 

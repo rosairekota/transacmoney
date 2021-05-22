@@ -35,7 +35,7 @@ class City
     private $agences;
 
     /**
-     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="ville")
+     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="ville",cascade={"persist"})
      */
     private $depots;
 

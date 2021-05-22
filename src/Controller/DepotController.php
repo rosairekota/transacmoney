@@ -57,6 +57,7 @@ class DepotController extends AbstractController
         $account = $accountRepot->findByUser($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //dd($depot);
             if ($account[0]->getMontantDebit() < 0 || $account[0]->getMontantDebit() < $depot->getMontant()) {
                 if ($account[0]->getMontantDebit() < 0) {
                     $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
@@ -66,7 +67,7 @@ class DepotController extends AbstractController
             } else {
 
                 //dd($account);
-                $montantCommission = $depot->getMontant() * 0.02;
+                $montantCommission = $depot->getMontant() * 0.025;
 
                 $montantReel = $depot->getMontant() - floatval($montantCommission);
 
@@ -86,7 +87,7 @@ class DepotController extends AbstractController
 
                 // recherche role user
                 if ($user->getRoles()[0] == 'ROLE_WRITER') {
-                    $salaireSurCommission = round($montantCommission * 0.005, 3);
+                    $salaireSurCommission = round($montantCommission * 0.05, 3);
 
                     $montantCommissionApres = $montantCommission - floor($salaireSurCommission);
                     $depot->setMontantCommission($montantCommissionApres);

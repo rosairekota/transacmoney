@@ -45,7 +45,7 @@ class Beneficiaire
     private $telephone;
 
     /**
-     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="beneficiaire")
+     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="beneficiaire",cascade={"persist"})
      */
     private $depots;
 
@@ -59,7 +59,7 @@ class Beneficiaire
         return $this->id;
     }
 
-    
+
 
     public function getPostnom(): ?string
     {
@@ -111,7 +111,7 @@ class Beneficiaire
 
     /**
      * Get the value of nom
-     */ 
+     */
     public function getNom()
     {
         return $this->nom;
@@ -121,7 +121,7 @@ class Beneficiaire
      * Set the value of nom
      *
      * @return  self
-     */ 
+     */
     public function setNom($nom)
     {
         $this->nom = $nom;
