@@ -59,7 +59,7 @@ class Depot
     private $date_depot;
 
     /**
-     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="depots")
+     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="depots",cascade={"persist"})
      */
     private $ville;
 

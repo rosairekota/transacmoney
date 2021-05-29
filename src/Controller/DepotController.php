@@ -46,27 +46,30 @@ class DepotController extends AbstractController
      * @Route("/new/{user_email}-@j9a8j7k94", name="depot_new", methods={"GET","POST"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function new($user_email, Request $request, UserRepository $userRepo, CompteRepository $accountRepot): Response
+    public function new($user_email, Request $request, UserRepository $userRepo, CompteRepository $accountUserRepot): Response
     {
 
         $user = $userRepo->findOneByUsernameOrEmail($user_email);
+        $userAdmin = $userRepo->findOneByUsernameOrEmail("admin@transacmoney.com");
+        $montantFinalCommission = 0;
 
         $depot = new Depot();
         $form = $this->createForm(DepotType::class, $depot);
         $form->handleRequest($request);
-        $account = $accountRepot->findByUser($user);
+        $accountUser = $accountUserRepot->findByUser($user);
+        $accountAdmin = $accountUserRepot->findByUser($userAdmin);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($depot);
-            if ($account[0]->getMontantDebit() < 0 || $account[0]->getMontantDebit() < $depot->getMontant()) {
-                if ($account[0]->getMontantDebit() < 0) {
+
+            if ($accountUser[0]->getMontantDebit() < 0 || $accountUser[0]->getMontantDebit() < $depot->getMontant()) {
+                if ($accountUser[0]->getMontantDebit() < 0) {
                     $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
-                } elseif ($account[0]->getMontantDebit() < $depot->getMontant()) {
+                } elseif ($accountUser[0]->getMontantDebit() < $depot->getMontant()) {
                     $this->addFlash("danger", "Dépot non autorisé. Votre caise est inferieur du montant du dépot. Veuillez contacter l'administrateur.");
                 }
             } else {
 
-                //dd($account);
+                //dd($accountUser);
                 $montantCommission = $depot->getMontant() * 0.025;
 
                 $montantReel = $depot->getMontant() - floatval($montantCommission);
@@ -77,25 +80,28 @@ class DepotController extends AbstractController
                 $depot->setCodeDepot($codeSecret);
                 $depot->setUser_depot($user);
 
-                $credit = $account[0]->getMontantDebit() - $depot->getMontant();
+                $credit = $accountUser[0]->getMontantDebit() - $depot->getMontant();
 
-                $account[0]->setMontantCredit($depot->getMontant() + $account[0]->getMontantCredit());
-                $account[0]->setMontantDebit(floor($credit));
-                $solde = (floatval($account[0]->getMontantDebit() - $account[0]->getMontantCredit()));
+                $accountUser[0]->setMontantCredit($depot->getMontant() + $accountUser[0]->getMontantCredit());
+                $accountUser[0]->setMontantDebit(floor($credit));
+                $solde = (floatval($accountUser[0]->getMontantDebit() - $accountUser[0]->getMontantCredit()));
                 //dd($solde);
-                $account[0]->setSolde($solde <= 0 ? 0 : $solde);
+                $accountUser[0]->setSolde($solde <= 0 ? 0 : $solde);
 
                 // recherche role user
                 if ($user->getRoles()[0] == 'ROLE_WRITER') {
                     $salaireSurCommission = round($montantCommission * 0.05, 3);
 
-                    $montantCommissionApres = $montantCommission - floor($salaireSurCommission);
-                    $depot->setMontantCommission($montantCommissionApres);
+                    $montantFinalCommission = $montantCommission - floor($salaireSurCommission);
+                    $depot->setMontantCommission($montantFinalCommission);
 
-                    $account[0]->setCommissionSousAgent($salaireSurCommission + $account[0]->getCommissionSousAgent());
+                    $accountUser[0]->setCommissionSousAgent($salaireSurCommission + $accountUser[0]->getCommissionSousAgent());
 
 
                     $entityManager->persist($depot);
+                }
+                if ($userAdmin->getRoles()[0] == 'ROLE_SUPERUSER') {
+                    $accountAdmin[0]->setCommissionSousAgent($montantFinalCommission + $accountAdmin[0]->getCommissionSousAgent());
                 } else {
 
                     $depot->setMontantCommission($montantCommission);

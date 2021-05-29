@@ -1,7 +1,8 @@
 <div class="container">
     <div class="page-title">
         <div class="title_left">
-            <h5><a href="{{ path('beneficiaire_index') }} }}">voir {{ "backend.depot.depot_listing"|trans }}</a>
+            <h5><a href="{{ path('depot_index',{'user_email':app.user.email}) }}">voir {{
+                    "backend.depot.depot_listing"|trans }}</a>
                 &gt;&gt; </h5>
         </div>
     </div>
@@ -37,26 +38,26 @@
                     {{ form_start(form) }}
                     {{ form_row(form.montant) }}
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 border border-rondered"
+                            style="background-color:rgba(228, 232, 235, 0.856)">
                             {{ form_row(form.expediteur) }}
                         </div>
                         <div class="col-sm-6">
-                            {{ form_row(form.beneficiaire) }}
+                            <div class="row border border-rondered" style="background-color:rgba(250, 251, 252, 0.795)">
+                                <div class="col-sm-12"> {{ form_row(form.beneficiaire) }}</div>
+                                <div class="col-sm-12"> {{ form_row(form.ville) }}</div>
+                            </div>
                         </div>
 
                     </div>
-                </div>
-                {{ form_row(form.ville) }}
-
-                <div class="ln_solid"></div>
-                <div class="item form-group">
-                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3 mt-2">
                         <a class="btn btn-warning" href="{{ path('app_admin_index') }}">{{ "backend.user.cancel"|trans
                             }}</a>
                         <button type="submit" name="valider" class="btn btn-success">{{
                             button_label|default('Enregistrer') }}</button>
                     </div>
                 </div>
+
                 {{ form_end(form) }}
             </div>
         </div>

@@ -16,12 +16,11 @@ class AgenceType extends AbstractType
         $builder
             ->add('name')
             ->add('abbrev_name')
-            ->add('description')
-            ->add('city',EntityType::class,[
-                'class'         =>City::class,
-                'choice_label'  =>'name'
-            ])
-        ;
+            ->add('description', null, ['label' => 'Adresse'])
+            ->add('city', EntityType::class, [
+                'class'         => City::class,
+                'choice_label'  => 'name'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

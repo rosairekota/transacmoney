@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Depot;
+use App\Services\ReportingService;
+use Twig\Environment;
 use App\Entity\Compte;
 use App\Entity\Search;
 use App\Entity\Retrait;
 use App\Form\SearchType;
 use App\Form\RetraitType;
+use Spipu\Html2Pdf\Html2Pdf;
 use App\Repository\UserRepository;
 use App\Repository\DepotRepository;
 use App\Repository\CompteRepository;
@@ -27,11 +30,13 @@ class RetraitController extends AbstractController
     private SessionInterface $session;
     private $depoRepo;
     private $user_email;
+    private $twig;
 
-    public function __construct(DepotRepository $depoRepo, SessionInterface $session)
+    public function __construct(DepotRepository $depoRepo, SessionInterface $session, Environment $twig)
     {
         $this->depoRepo = $depoRepo;
         $this->session = $session;
+        $this->twig = $twig;
     }
     /**
      * @Route("/@j9a8j7k94.@{user_email}-j7k", name="retrait_index", methods={"GET|POST"})
@@ -121,74 +126,76 @@ class RetraitController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($account[0]->getMontantDebit() < 0 || $account[0]->getMontantDebit() < $retrait->getMontantRetire()) {
-                if ($account[0]->getMontantDebit() < 0) {
-                    $this->addFlash("danger", "Retrait non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
-                } elseif ($account[0]->getMontantDebit() < $retrait->getMontantRetire()) {
-                    $this->addFlash("danger", "Retrait non autorisé. Votre caise est inferieur du montant de retrait. Veuillez contacter l'administrateur.");
+
+            $retrait->setDepot($depotSession['depot'][0]);
+            $datas = [
+                "depot_id" => $depotSession['depot'][0]->getId(),
+                "user_retrait_id" => $user->getId(),
+                "montant_retire" => $retrait->getMontantRetire(),
+                "beneficiaire_piece_type" => $retrait->getBeneficiairePieceType(),
+                "beneficiaire_piece_numero" => $retrait->getBeneficiairePieceNumero(),
+                "libelle" => $retrait->getLibelle(),
+                "code_retrait" => $retrait->getCodeRetrait()
+            ];
+
+            $montantCommission = $depotSession['depot'][0]->getMontantCommission();
+            $credit = $account[0]->getMontantDebit() - $retrait->getMontantRetire();
+
+            $account[0]->setMontantCredit($retrait->getMontantRetire() + $account[0]->getMontantCredit());
+            $account[0]->setMontantDebit(floor($credit));
+            $solde = (floatval($account[0]->getMontantDebit() - $account[0]->getMontantCredit()));
+            //dd($solde);
+            $account[0]->setSolde($solde <= 0 ? 0 : $solde);
+            // recherche role user
+            if ($user->getRoles()[0] == 'ROLE_WRITER') {
+
+                $salaireSurCommission = round($montantCommission * 0.005, 3);
+
+                $montantCommissionApres = floor($montantCommission - $salaireSurCommission);
+
+                $depotSession['depot'][0]->setMontantCommission($montantCommissionApres);
+
+                $depoUpdate = $depoRepo->updateAmountBySql(
+                    [
+                        'montant' => $montantCommissionApres,
+                        'code_depot' => $retrait->getCodeRetrait()
+                    ]
+                );
+                // on verifie si le depot a ete mise a jour
+                if (!empty($depoUpdate)) {
+
+                    $account[0]->setCommissionSousAgent($salaireSurCommission);
+
+                    $account[0]->setUserCompte($user);
+
+
+                    $entityManager->flush();
                 }
-            } else {
-
-
-                $retrait->setDepot($depotSession['depot'][0]);
-                $datas = [
-                    "depot_id" => $depotSession['depot'][0]->getId(),
-                    "user_retrait_id" => $user->getId(),
-                    "montant_retire" => $retrait->getMontantRetire(),
-                    "beneficiaire_piece_type" => $retrait->getBeneficiairePieceType(),
-                    "beneficiaire_piece_numero" => $retrait->getBeneficiairePieceNumero(),
-                    "libelle" => $retrait->getLibelle(),
-                    "code_retrait" => $retrait->getCodeRetrait()
-                ];
-
-                $montantCommission = $depotSession['depot'][0]->getMontantCommission();
-                $credit = $account[0]->getMontantDebit() - $retrait->getMontantRetire();
-
-                $account[0]->setMontantCredit($retrait->getMontantRetire() + $account[0]->getMontantCredit());
-                $account[0]->setMontantDebit(floor($credit));
-                $solde = (floatval($account[0]->getMontantDebit() - $account[0]->getMontantCredit()));
-                //dd($solde);
-                $account[0]->setSolde($solde <= 0 ? 0 : $solde);
-                // recherche role user
-                if ($user->getRoles()[0] == 'ROLE_WRITER') {
-
-                    $salaireSurCommission = round($montantCommission * 0.005, 3);
-
-                    $montantCommissionApres = floor($montantCommission - $salaireSurCommission);
-
-                    $depotSession['depot'][0]->setMontantCommission($montantCommissionApres);
-
-                    $depoUpdate = $depoRepo->updateAmountBySql(
-                        [
-                            'montant' => $montantCommissionApres,
-                            'code_depot' => $retrait->getCodeRetrait()
-                        ]
-                    );
-                    // on verifie si le depot a ete mise a jour
-                    if (!empty($depoUpdate)) {
-
-                        $account[0]->setCommissionSousAgent($salaireSurCommission);
-
-                        $account[0]->setUserCompte($user);
-
-
-                        $entityManager->flush();
-                    }
-                }
-                $retraitRepository->insertBySql($datas);
-                unset($depotSession);
-
-
-
-
-                return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
             }
+            $retraitRepository->insertBySql($datas);
+            $idDepot = $depotSession['depot'][0]->getId();
+            unset($depotSession);
+
+
+
+
+            // return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
+            return $this->redirectToRoute('retrait_report', ['id' => $idDepot]);
         }
 
         return $this->render('admin/retrait/new.html.twig', [
             'retrait' => $retrait,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/retrait/report/{id}", methods={"GET","POST"},name="retrait_report", requirements={"id":"[a-z0-9\-]*"})
+     */
+
+    public function report(Depot $depot, ReportingService $reportingService)
+    {
+        $reportingService->reportView($depot);
     }
     /**
      * @Route("/new/{user_email}", name="retrait_new_old", methods={"GET","POST"})

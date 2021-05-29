@@ -2,14 +2,15 @@
 
 namespace App\Form;
 
-use App\Entity\Beneficiaire;
 use App\Entity\City;
-use App\Entity\Depot;
-use App\Entity\Expediteur;
 use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Depot;
+use App\Form\CityType;
+use App\Entity\Expediteur;
+use App\Entity\Beneficiaire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DepotType extends AbstractType
@@ -29,11 +30,7 @@ class DepotType extends AbstractType
 
             ->add(
                 'ville',
-                EntityType::class,
-                [
-                    'class'         => City::class,
-                    'choice_label'  => 'name'
-                ]
+                CityType::class
             );
     }
 
