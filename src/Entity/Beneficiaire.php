@@ -49,6 +49,7 @@ class Beneficiaire
      */
     private $depots;
 
+
     public function __construct()
     {
         $this->depots = new ArrayCollection();

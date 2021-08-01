@@ -16,7 +16,7 @@ class ReportingService extends Command
 
     private  $twig;
     private $pdf;
-    public function __construct(Environment $twig)
+    public function __construct(?Environment $twig)
     {
 
         $this->twig = $twig;

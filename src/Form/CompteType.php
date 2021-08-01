@@ -8,6 +8,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class CompteType extends AbstractType
 {
@@ -15,12 +17,7 @@ class CompteType extends AbstractType
     {
         $builder
 
-            ->add('montant_debit', null, ['label' => 'Inserer le montant caisse'])
-            ->add('user_compte', EntityType::class, [
-                'choice_label' => "username",
-                'label' => "Choisir l'agent",
-                "class" => User::class
-            ]);
+            ->add('montant_debit', IntegerType::class, ['label' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

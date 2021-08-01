@@ -11,6 +11,7 @@ use App\Repository\CompteRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -58,18 +59,22 @@ class DepotController extends AbstractController
         $form->handleRequest($request);
         $accountUser = $accountUserRepot->findByUser($user);
         $accountAdmin = $accountUserRepot->findByUser($userAdmin);
+        $userByAccountType = $accountUserRepot->findByAccountTypeNumber(['id' => $user->getId(), 'type_compte' => 1]);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
+            dd($depot);
 
-            if ($accountUser[0]->getMontantDebit() < 0 || $accountUser[0]->getMontantDebit() < $depot->getMontant()) {
-                if ($accountUser[0]->getMontantDebit() < 0) {
+            if ($userByAccountType->solde < 0 || $userByAccountType->solde < $depot->getMontant()) {
+                if ($userByAccountType->solde < 0) {
                     $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
-                } elseif ($accountUser[0]->getMontantDebit() < $depot->getMontant()) {
-                    $this->addFlash("danger", "Dépot non autorisé. Votre caise est inferieur du montant du dépot. Veuillez contacter l'administrateur.");
+                } elseif ($userByAccountType->solde < $depot->getMontant()) {
+                    $this->addFlash("danger", "Dépot non autorisé. Votre solde est inferieur au montant du dépot. Veuillez contacter l'administrateur.");
                 }
             } else {
 
-                //dd($accountUser);
+                dd($userByAccountType->solde);
+
                 $montantCommission = $depot->getMontant() * 0.025;
 
                 $montantReel = $depot->getMontant() - floatval($montantCommission);
@@ -85,12 +90,12 @@ class DepotController extends AbstractController
                 $accountUser[0]->setMontantCredit($depot->getMontant() + $accountUser[0]->getMontantCredit());
                 $accountUser[0]->setMontantDebit(floor($credit));
                 $solde = (floatval($accountUser[0]->getMontantDebit() - $accountUser[0]->getMontantCredit()));
-                //dd($solde);
+
                 $accountUser[0]->setSolde($solde <= 0 ? 0 : $solde);
 
                 // recherche role user
                 if ($user->getRoles()[0] == 'ROLE_WRITER') {
-                    $salaireSurCommission = round($montantCommission * 0.05, 3);
+                    $salaireSurCommission = round($montantCommission - 0.5, 3);
 
                     $montantFinalCommission = $montantCommission - floor($salaireSurCommission);
                     $depot->setMontantCommission($montantFinalCommission);
@@ -98,15 +103,15 @@ class DepotController extends AbstractController
                     $accountUser[0]->setCommissionSousAgent($salaireSurCommission + $accountUser[0]->getCommissionSousAgent());
 
 
-                    $entityManager->persist($depot);
+                    //$entityManager->persist($depot);
                 }
                 if ($userAdmin->getRoles()[0] == 'ROLE_SUPERUSER') {
                     $accountAdmin[0]->setCommissionSousAgent($montantFinalCommission + $accountAdmin[0]->getCommissionSousAgent());
-                } else {
-
-                    $depot->setMontantCommission($montantCommission);
-                    $entityManager->persist($depot);
                 }
+
+                $depot->setMontantCommission($montantCommission);
+
+                $entityManager->persist($depot);
 
 
                 $entityManager->flush();

@@ -44,6 +44,13 @@ class Agence
      */
     private $city;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Compte::class, cascade={"persist", "remove"})
+     */
+    private $compte;
+
+
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -128,6 +135,18 @@ class Agence
     public function setCity(?City $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
 
         return $this;
     }

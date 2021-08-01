@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,31 +19,31 @@ class Compte
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
+    /** @ORM\Column(type="string", length=50, nullable=true)
      */
-    private $montant_credit;
+    private $numero_compte;
+
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="datetime")
      */
-    private $montant_debit;
+    private $date_ouverture;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fin_validite;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $solde;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comptes")
-     */
-    private $user_compte;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $commission_sous_agent;
-
+    public function __construct()
+    {
+        $this->date_ouverture = new \DateTime();
+        $this->numero_compte = str_shuffle((string)$this->date_ouverture);
+    }
 
 
     public function getId(): ?int
@@ -49,62 +51,52 @@ class Compte
         return $this->id;
     }
 
-    public function getMontantCredit(): ?string
+    public function getNumeroCompte(): ?string
     {
-        return $this->montant_credit;
+        return $this->numero_compte;
     }
 
-    public function setMontantCredit(?string $montant_credit): self
+    public function setNumeroCompte(?string $numero_compte): self
     {
-        $this->montant_credit = $montant_credit;
+        $this->numero_compte = $numero_compte;
 
         return $this;
     }
 
-    public function getMontantDebit(): ?string
+
+
+    public function getDateOuverture(): ?\DateTimeInterface
     {
-        return $this->montant_debit;
+        return $this->date_ouverture;
     }
 
-    public function setMontantDebit(?string $montant_debit): self
+    public function setDateOuverture(\DateTimeInterface $date_ouverture): self
     {
-        $this->montant_debit = $montant_debit;
+        $this->date_ouverture = $date_ouverture;
 
         return $this;
     }
 
-    public function getSolde(): ?string
+    public function getFinValidite(): ?\DateTimeInterface
+    {
+        return $this->fin_validite;
+    }
+
+    public function setFinValidite(?\DateTimeInterface $fin_validite): self
+    {
+        $this->fin_validite = $fin_validite;
+
+        return $this;
+    }
+
+    public function getSolde(): ?float
     {
         return $this->solde;
     }
 
-    public function setSolde(?string $solde): self
+    public function setSolde(?float $solde): self
     {
         $this->solde = $solde;
-
-        return $this;
-    }
-
-    public function getUserCompte(): ?User
-    {
-        return $this->user_compte;
-    }
-
-    public function setUserCompte(?User $user_compte): self
-    {
-        $this->user_compte = $user_compte;
-
-        return $this;
-    }
-
-    public function getCommissionSousAgent(): ?float
-    {
-        return $this->commission_sous_agent;
-    }
-
-    public function setCommissionSousAgent(?float $commission_sous_agent): self
-    {
-        $this->commission_sous_agent = $commission_sous_agent;
 
         return $this;
     }

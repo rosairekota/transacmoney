@@ -1,0 +1,58 @@
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+        <ul class="nav side-menu">
+            <li><a href="{{ path('app_admin_index') }}"><i class="fa fa-home"></i> Tableau de Bord</a>
+            </li>
+
+            {# <li><a><i class="fa fa-user"></i> {{ "backend.menu.user"|trans }} <span
+                        class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('app_admin_users') }}">{{ "backend.menu.manage"|trans }}</a></li>
+                </ul>
+            </li> #}
+            {# <li><a><i class="fa fa-folder-open-o"></i>Ville <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('city_index') }}">{{ "backend.menu.manage"|trans }}</a></li>
+                </ul>
+            </li> #}
+            <li><a><i class="fa fa-bookmark"></i>Agence</a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('app_admin_users') }}">Creer une Agence</a></li>
+                    <li><a href="{{ path('agence_index') }}">Voir Agences</a></li>
+
+                </ul>
+            </li>
+
+
+            <li><a><i class="fa fa-folder-open"></i>Recharge <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('beneficiaire_index') }}">{{ "backend.menu.ben"|trans }}</a></li>
+                    <li><a href="{{ path('expediteur_index') }}">{{ "backend.menu.exp"|trans }}</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-folder-open"></i>Transactions <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}"><i
+                                class="fa fa-clipboard"></i> Liste</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-dollar"></i>Les paiements <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}"><i
+                                class="fa fa-clipboard"></i> Liste</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-folder-open"></i>Paramètres <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}"><i
+                                class="fa fa-clipboard"></i> Liste</a></li>
+                </ul>
+            </li>
+
+
+
+
+        </ul>
+    </div>
+
+</div>

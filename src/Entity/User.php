@@ -88,7 +88,7 @@ class User implements UserInterface, EquatableInterface
      * @ORM\OneToMany(targetEntity=Historique::class, mappedBy="user")
      */
     private $historiques;
-    
+
     // CREDENTIALS PROPERTY
     /**
      * @ORM\ManyToOne(targetEntity=agence::class, inversedBy="users")
@@ -99,16 +99,17 @@ class User implements UserInterface, EquatableInterface
      * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="user_id")
      */
     private $depots;
-  
+
     /**
      * @ORM\OneToMany(targetEntity=Retrait::class, mappedBy="user_retrait")
      */
     private $retraits;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="user_compte")
-     */
-    private $comptes;
+
+
+
+
+
 
     public function __construct()
     {
@@ -117,7 +118,6 @@ class User implements UserInterface, EquatableInterface
         $this->historiques = new ArrayCollection();
         $this->depots = new ArrayCollection();
         $this->retraits = new ArrayCollection();
-        $this->comptes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,7 +191,7 @@ class User implements UserInterface, EquatableInterface
         return $this->nomComplet;
     }
 
-    public function setNomComplet( $nomComplet): self
+    public function setNomComplet($nomComplet): self
     {
         $this->nomComplet = $nomComplet;
 
@@ -203,7 +203,7 @@ class User implements UserInterface, EquatableInterface
         return $this->email;
     }
 
-    public function setEmail( $email): self
+    public function setEmail($email): self
     {
         $this->email = $email;
 
@@ -241,15 +241,17 @@ class User implements UserInterface, EquatableInterface
         return $this;
     }
 
-    public function getAvatarUrl($size){
-        return "https://api.adorable.io/avatars/$size/".$this->username;
+    public function getAvatarUrl($size)
+    {
+        return "https://api.adorable.io/avatars/$size/" . $this->username;
     }
 
 
-    function getColorCode() {
+    function getColorCode()
+    {
         $code = dechex(crc32($this->getUsername()));
         $code = substr($code, 0, 6);
-        return "#".$code;
+        return "#" . $code;
     }
 
     /**
@@ -399,35 +401,6 @@ class User implements UserInterface, EquatableInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getComptes(): Collection
-    {
-        return $this->comptes;
-    }
-
-    public function addCompte(Compte $compte): self
-    {
-        if (!$this->comptes->contains($compte)) {
-            $this->comptes[] = $compte;
-            $compte->setUserCompte($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCompte(Compte $compte): self
-    {
-        if ($this->comptes->removeElement($compte)) {
-            // set the owning side to null (unless already changed)
-            if ($compte->getUserCompte() === $this) {
-                $compte->setUserCompte(null);
-            }
-        }
-
-        return $this;
-    }
 
     public function __toString()
     {
@@ -481,7 +454,7 @@ class User implements UserInterface, EquatableInterface
     public function isEqualTo(UserInterface $user)
     {
         if ($user instanceof User)
-        return $this->isValid() && !$this->isDeleted() && $this->getPassword() == $user->getPassword() && $this->getUsername() == $user->getUsername()
-            && $this->getEmail() == $user->getEmail() ;
+            return $this->isValid() && !$this->isDeleted() && $this->getPassword() == $user->getPassword() && $this->getUsername() == $user->getUsername()
+                && $this->getEmail() == $user->getEmail();
     }
 }
