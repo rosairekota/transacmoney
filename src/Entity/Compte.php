@@ -42,7 +42,7 @@ class Compte
     public function __construct()
     {
         $this->date_ouverture = new \DateTime();
-        $this->numero_compte = str_shuffle((string)$this->date_ouverture);
+        $this->numero_compte = str_shuffle("1234");
     }
 
 

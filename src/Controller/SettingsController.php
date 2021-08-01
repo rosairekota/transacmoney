@@ -5,13 +5,15 @@ namespace App\Controller;
 use App\Entity\Settings;
 use App\Form\SettingsType;
 use App\Repository\SettingsRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/settings")
+ * @Route("/admin/settings")
+ * @IsGranted("ROLE_WRITER")
  */
 class SettingsController extends AbstractController
 {
@@ -83,7 +85,7 @@ class SettingsController extends AbstractController
      */
     public function delete(Request $request, Settings $setting): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$setting->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $setting->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($setting);
             $entityManager->flush();

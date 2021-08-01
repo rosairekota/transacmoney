@@ -15,9 +15,9 @@
                     <li><a href="{{ path('city_index') }}">{{ "backend.menu.manage"|trans }}</a></li>
                 </ul>
             </li> #}
-            <li><a><i class="fa fa-bookmark"></i>Agence</a>
+            <li><a><i class="fa fa-bookmark"></i>Agence<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="{{ path('app_admin_users') }}">Creer une Agence</a></li>
+                    <li><a href="{{ path('app_admin_new_user') }}">Creer une Agence</a></li>
                     <li><a href="{{ path('agence_index') }}">Voir Agences</a></li>
 
                 </ul>
@@ -44,8 +44,7 @@
             </li>
             <li><a><i class="fa fa-folder-open"></i>Paramètres <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}"><i
-                                class="fa fa-clipboard"></i> Liste</a></li>
+                    <li><a href="{{ path('settings_index') }}"><i class="fa fa-clipboard"></i>Configuration</a></li>
                 </ul>
             </li>
 

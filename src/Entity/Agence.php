@@ -35,12 +35,12 @@ class Agence
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence",cascade={"persist"})
      */
     private $users;
 
     /**
-     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="agences")
+     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="agences",cascade={"persist"})
      */
     private $city;
 

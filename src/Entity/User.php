@@ -91,17 +91,17 @@ class User implements UserInterface, EquatableInterface
 
     // CREDENTIALS PROPERTY
     /**
-     * @ORM\ManyToOne(targetEntity=agence::class, inversedBy="users")
+     * @ORM\ManyToOne(targetEntity=agence::class, inversedBy="users",cascade={"persist"})
      */
     private $agence;
 
     /**
-     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="user_id")
+     * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="user_id",cascade={"persist"})
      */
     private $depots;
 
     /**
-     * @ORM\OneToMany(targetEntity=Retrait::class, mappedBy="user_retrait")
+     * @ORM\OneToMany(targetEntity=Retrait::class, mappedBy="user_retrait",cascade={"persist"})
      */
     private $retraits;
 

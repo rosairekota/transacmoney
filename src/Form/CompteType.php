@@ -17,7 +17,7 @@ class CompteType extends AbstractType
     {
         $builder
 
-            ->add('montant_debit', IntegerType::class, ['label' => false]);
+            ->add('solde', IntegerType::class, ['label' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

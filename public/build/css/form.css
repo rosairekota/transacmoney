@@ -928,10 +928,10 @@ p {
     }
 .form-control{
   font-size: 14px;
-  
 }
 .btn-login{
-  margin: 1rem !important;
+  margin-bottom: 1rem !important;
+  transition: all 0.5s ease;
 }
 .btn-login:hover{
   background: linear-gradient(to bottom,#2a5572 ,#91A5e4) !important;

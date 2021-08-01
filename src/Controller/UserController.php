@@ -60,7 +60,7 @@ class UserController extends BaseController
     }
 
     /**
-     * @Route("/admin/user/new",name="app_admin_new_user")
+     * @Route("/admin/creer-une-nouvelle-agence-avec-son-agent",name="app_admin_new_user")
      * @IsGranted("ROLE_SUPERUSER")
      */
     public function newUser(Request $request, TranslatorInterface $translator)
@@ -70,6 +70,7 @@ class UserController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var  User $user */
             $user = $form->getData();
+
             /** @var Role $role */
             $password = $form["justpassword"]->getData();
             $role = $form["role"]->getData();

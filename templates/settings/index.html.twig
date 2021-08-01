@@ -1,43 +1,40 @@
-{% extends 'base.html.twig' %}
+{% extends "admin/bars.html.twig" %}
 
-{% block title %}Settings index{% endblock %}
+{% block contenpage %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
 
-{% block body %}
-    <h1>Settings index</h1>
+<div class="body bg-default">
+    <div class="main-content">
+        {% if is_granted("ROLE_SUPERUSER") %}
+        <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+            <div class="container-fluid">
+                <h2 class="mb-5 text-center text-muted">Configuration initial</h2>
+                <div class="header-body">
+                    <div class="row">
+                        <div class="col-12 img-thumbnail mb-4">
+                            <p class="text-center text-danger">Bienvenue dans la configuration générale du
+                                <strong>Transacmoney</strong>. &nbsp;Cette Section vous permet de modifier les marges
+                                bénéficiaires et pourcentages des
+                                agences
+                            </p>
+                        </div>
+                        <div class="col-sm-12 col-md-12">
+                            <div class="row">
+                                {% for setting in settings %}
+                                {% include "settings/card/_card.html.twig" %}
+                                {% endfor %}
+                            </div>
+                        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>MinAmount</th>
-                <th>CostSend</th>
-                <th>SendCommission</th>
-                <th>RetreatProfit</th>
-                <th>SendProfit</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for setting in settings %}
-            <tr>
-                <td>{{ setting.id }}</td>
-                <td>{{ setting.minAmount }}</td>
-                <td>{{ setting.costSend }}</td>
-                <td>{{ setting.sendCommission }}</td>
-                <td>{{ setting.retreatProfit }}</td>
-                <td>{{ setting.sendProfit }}</td>
-                <td>
-                    <a href="{{ path('settings_show', {'id': setting.id}) }}">show</a>
-                    <a href="{{ path('settings_edit', {'id': setting.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Page content -->
+    </div>
+</div>
 
-    <a href="{{ path('settings_new') }}">Create new</a>
+
 {% endblock %}
