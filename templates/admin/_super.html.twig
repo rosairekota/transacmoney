@@ -18,16 +18,16 @@
             <li><a><i class="fa fa-bookmark"></i>Agence<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{{ path('app_admin_new_user') }}">Creer une Agence</a></li>
-                    <li><a href="{{ path('agence_index') }}">Voir Agences</a></li>
+                    <li><a href="{{ path('app_admin_users') }}">Voir Agences</a></li>
 
                 </ul>
             </li>
 
 
-            <li><a><i class="fa fa-folder-open"></i>Recharge <span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-search"></i>Recharge <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="{{ path('beneficiaire_index') }}">{{ "backend.menu.ben"|trans }}</a></li>
-                    <li><a href="{{ path('expediteur_index') }}">{{ "backend.menu.exp"|trans }}</a></li>
+                    <li><a href="{{ path('credit_new') }}">Recharger une Agence</a></li>
+                    <li><a href="{{ path('credit_index') }}">voir les rechargement</a></li>
                 </ul>
             </li>
             <li><a><i class="fa fa-folder-open"></i>Transactions <span class="fa fa-chevron-down"></span></a>

@@ -1,0 +1,72 @@
+{% extends "admin/bars.html.twig" %}
+
+{% block contenpage %}
+<div class="">
+    <div class="page-title">
+        <div class="title_left">
+            <h5>
+                Rechargements
+            </h5>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>
+                        {{ "backend.user.user_listing"|trans }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a href="{{ path('credit_new') }}" class="btn btn-success">RECHARGER UNE AGENCE</a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <table id="example" class="display table table-striped table-bordered dataminetables">
+                            <thead>
+                                <th>N°</th>
+                                <th>MONTANT RECHARGE</th>
+                                <th>DATE RECHARGEMENT</th>
+                                <th>CODE RECHARGEMENT</th>
+                                <th>NOUVEAU SOLDE</th>
+                                <th>COMMENTAIRE</th>
+                                <th>EDITER</th>
+                                <th>SUPPRIMER</th>
+                            </thead>
+                            <tbody>
+                                {% for credit in credits %}
+                                <tr>
+                                    <td>{{ credit.id }}</td>
+                                    <td>{{ credit.creditAmount }}</td>
+                                    <td>{{ credit.createdAt ? credit.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                                    <td>{{ credit.creditCode }}</td>
+                                    <td>{{ credit.description }}</td>
+                                    <td>
+                                        <a class="btn btn-primary" href="{{ path('credit_edit', {'id': credit.id}) }}">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" href="{{ path('credit_edit', {'id': credit.id}) }}">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{ include('admin/credit/_delete_form.html.twig') }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

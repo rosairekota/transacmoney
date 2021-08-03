@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Description</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-6 col-sm-12">
+                    <p>Nom de l'agence :<strong>{{user.agence.name}}</strong> </p>
+                    <p>Responsable :{{user.nomComplet}}</p>
+                    <p>Email du Responsable :{{user.email}}</p>
+                    <p>Ville :{{user.agence.city.name}}</p>
+                    <p>Solde :{{user.agence.compte.solde}}</p>
+                    <p>Contact :{{user.agence.contact}}</p>
+                    <p>Date de creation :{{user.agence.compte.dateOuverture|date("m/d/Y")}}</p>
+
+                </div>
+                <div class="col-6 col-sm-12">
+                    <div class="row">
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

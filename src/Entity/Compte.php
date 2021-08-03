@@ -39,10 +39,22 @@ class Compte
      */
     private $solde;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Credit::class, mappedBy="account")
+     */
+    private $credits;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Debit::class, mappedBy="account")
+     */
+    private $debits;
+
     public function __construct()
     {
         $this->date_ouverture = new \DateTime();
         $this->numero_compte = str_shuffle("1234");
+        $this->credits = new ArrayCollection();
+        $this->debits = new ArrayCollection();
     }
 
 
@@ -97,6 +109,66 @@ class Compte
     public function setSolde(?float $solde): self
     {
         $this->solde = $solde;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Credit[]
+     */
+    public function getCredits(): Collection
+    {
+        return $this->credits;
+    }
+
+    public function addCredit(Credit $credit): self
+    {
+        if (!$this->credits->contains($credit)) {
+            $this->credits[] = $credit;
+            $credit->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCredit(Credit $credit): self
+    {
+        if ($this->credits->removeElement($credit)) {
+            // set the owning side to null (unless already changed)
+            if ($credit->getAccount() === $this) {
+                $credit->setAccount(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Debit[]
+     */
+    public function getDebits(): Collection
+    {
+        return $this->debits;
+    }
+
+    public function addDebit(Debit $debit): self
+    {
+        if (!$this->debits->contains($debit)) {
+            $this->debits[] = $debit;
+            $debit->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDebit(Debit $debit): self
+    {
+        if ($this->debits->removeElement($debit)) {
+            // set the owning side to null (unless already changed)
+            if ($debit->getAccount() === $this) {
+                $debit->setAccount(null);
+            }
+        }
 
         return $this;
     }

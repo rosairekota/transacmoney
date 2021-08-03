@@ -6,17 +6,19 @@ namespace App\Controller;
 
 use App\Entity\Role;
 use App\Entity\User;
-use App\Form\ChangePwsdFormType;
+use App\Entity\Agence;
 use App\Form\UserFormType;
+use App\Form\ChangePwsdFormType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends BaseController
 {
@@ -114,6 +116,16 @@ class UserController extends BaseController
         return $this->render("admin/user/userform.html.twig", ["userForm" => $form->createView()]);
     }
 
+    /**
+     * @Route("/visualiser-en-detail/{id}", name="app_admin_user_agency", methods={"GET"})
+     * @IsGranted("ROLE_SUPERUSER")
+     */
+    public function show(User $user): Response
+    {
+        return $this->render('admin/user/show.html.twig', [
+            'user' => $user,
+        ]);
+    }
     /**
      * @Route("/admin/user/changevalidite/{id}",name="app_admin_changevalidite_user",methods={"post"})
      * @IsGranted("ROLE_SUPERUSER")

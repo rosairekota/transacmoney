@@ -23,6 +23,13 @@ class Operation
     private $date_operation;
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $code_operation;
+
+
+    /**
      * @ORM\Column(type="float", nullable=true)
      */
     private $montant_debit;
@@ -103,6 +110,26 @@ class Operation
     public function setTypeOperation(?TypeOperation $typeOperation): self
     {
         $this->typeOperation = $typeOperation;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of codeOperation
+     */
+    public function getCodeOperation(): ?string
+    {
+        return $this->code_operation;
+    }
+
+    /**
+     * Set the value of codeOperation
+     *
+     * @return  self
+     */
+    public function setCodeOperation(string $code_operation): self
+    {
+        $this->code_operation = $code_operation;
 
         return $this;
     }
