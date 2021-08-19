@@ -1,5 +1,4 @@
 {% extends "admin/bars.html.twig" %}
-
 {% block contenpage %}
 <div class="">
     <div class="page-title">
@@ -33,9 +32,9 @@
                                 <th>MONTANT RECHARGE</th>
                                 <th>DATE RECHARGEMENT</th>
                                 <th>CODE RECHARGEMENT</th>
+                                <th>ANCIEN SOLDE</th>
                                 <th>NOUVEAU SOLDE</th>
-                                <th>COMMENTAIRE</th>
-                                <th>EDITER</th>
+                                <th>AGENCE</th>
                                 <th>SUPPRIMER</th>
                             </thead>
                             <tbody>
@@ -43,21 +42,18 @@
                                 <tr>
                                     <td>{{ credit.id }}</td>
                                     <td>{{ credit.creditAmount }}</td>
-                                    <td>{{ credit.createdAt ? credit.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                                    <td>{{ credit.createdAt ? credit.createdAt|date('d/m/Y à H:i:s') : '' }}</td>
                                     <td>{{ credit.creditCode }}</td>
-                                    <td>{{ credit.description }}</td>
-                                    <td>
-                                        <a class="btn btn-primary" href="{{ path('credit_edit', {'id': credit.id}) }}">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
+                                    <td>{{ credit.holdSolde }}</td>
+                                    <td>{{ credit.account.solde }}
+
                                     </td>
-                                    <td>
-                                        <a class="btn btn-primary" href="{{ path('credit_edit', {'id': credit.id}) }}">
-                                            <i class="fa fa-edit"></i>
+                                    <td>{{ credit.account.user.agence.name }} </td>
+
+                                    <td> <a href="{{ path('credit_delete', {'id': credit.id}) }}"
+                                            class="btn btn-danger disable-btn del-link" type="submit">
+                                            <i class="fa fa-trash"></i>
                                         </a>
-                                    </td>
-                                    <td>
-                                        {{ include('admin/credit/_delete_form.html.twig') }}
                                     </td>
                                 </tr>
                                 {% endfor %}

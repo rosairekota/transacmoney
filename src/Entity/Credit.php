@@ -43,6 +43,11 @@ class Credit
      */
     private $account;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $hold_solde;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -109,6 +114,18 @@ class Credit
     public function setAccount(?Compte $account): self
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    public function getHoldSolde(): ?float
+    {
+        return $this->hold_solde;
+    }
+
+    public function setHoldSolde(?float $hold_solde): self
+    {
+        $this->hold_solde = $hold_solde;
 
         return $this;
     }

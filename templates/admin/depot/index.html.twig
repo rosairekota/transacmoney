@@ -1,95 +1,98 @@
 {% extends "admin/bars.html.twig" %}
 
 {% block contenpage %}
-	<div class="container">
-		<div class="page-title">
-			<div class="title_left">
-				<h5>
-					{{ "backend.user.listing"|trans }}
-				</h5>
-			</div>
+<div class="container">
+	<div class="page-title">
+		<div class="title_left">
+			<h5>
+				{{ "backend.user.listing"|trans }}
+			</h5>
 		</div>
+	</div>
 
-		<div class="clearfix"></div>
+	<div class="clearfix"></div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="x_panel">
-					<div class="x_title">
-						<h2>
-							{{ "backend.depot.depot_listing"|trans }}</h2>
-						<ul class="nav navbar-right panel_toolbox">
-							<li>
-								<a href="{{ path('depot_new',{'user_email':app.user.email}) }}" class="btn btn-success">CREER</a>
-							</li>
-						</ul>
-						<div class="clearfix"></div>
-					</div>
-					<div class="x_content">
-						<div class="row">
-							<form action="{{ path('app_admin_groupaction_user') }}" id="grpaction" method="post" name="grpaction">
-								<div class="form-group form-inline">
-									<select class="form-control" name="action" required id="action_select">
-										<option value="">
-											{{ "backend.user.group_actions"|trans }}</option>
-										<option value="{{"backend.user.deactivate"|trans }}">
-											{{ "backend.user.deactivate"|trans }}</option>
-										<option value="{{"backend.user.Activate"|trans }}">
-											{{ "backend.user.Activate"|trans }}</option>
-										<option value="{{"backend.user.delete"|trans }}">
-											{{ "backend.user.delete"|trans }}</option>
-									</select>
-									<button class="btn btn-primary" type="submit">Go!!</button>
-								</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="x_panel">
+				<div class="x_title">
+					<h2>
+						{{ "backend.depot.depot_listing"|trans }}</h2>
+					<ul class="nav navbar-right panel_toolbox">
+						<li>
+							<a href="{{ path('depot_new',{'user_email':app.user.email}) }}"
+								class="btn btn-success">CREER</a>
+						</li>
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+				<div class="x_content">
+					<div class="row">
+						<form action="{{ path('app_admin_groupaction_user') }}" id="grpaction" method="post"
+							name="grpaction">
+							<div class="form-group form-inline">
+								<select class="form-control" name="action" required id="action_select">
+									<option value="">
+										{{ "backend.user.group_actions"|trans }}</option>
+									<option value="{{" backend.user.deactivate"|trans }}">
+										{{ "backend.user.deactivate"|trans }}</option>
+									<option value="{{" backend.user.Activate"|trans }}">
+										{{ "backend.user.Activate"|trans }}</option>
+									<option value="{{" backend.user.delete"|trans }}">
+										{{ "backend.user.delete"|trans }}</option>
+								</select>
+								<button class="btn btn-primary" type="submit">Go!!</button>
+							</div>
 
-							</form>
-							<table id="example" class="display table table-striped table-bordered dataminetables">
-								<thead>
-									<th><input type="checkbox" id="select_all" name="select_all"></th>
-                                    <th>Montant</th>
-                                    <th>Code Dépot</th>
-                                    <th>Date Dépot</th>
-                                    <th>Montant Commission</th>
-                                    <th>Expediteur</th>
-                                    <th>Beneficiaire</th>
-                                    {% if is_granted("ROLE_SUPERUSER") %}
-									<th>{{ "backend.user.modifier"|trans }}</th>
+						</form>
+						<table id="example" class="display table table-striped table-bordered dataminetables">
+							<thead>
+								<th>Agence Env.</th>
+								<th>Expediteur</th>
+								<th>Beneficiaire</th>
+								<th>Montant</th>
+								<th>Commission</th>
+								<th>Code Dépot</th>
+								<th>Date Dépot</th>
+								<th>Statut</th>
+								<th>Agence Reçu</th>
+								{% if is_granted("ROLE_SUPERUSER") %}
 
-									<th>{{ "backend.user.delete"|trans }}</th>
-                                    {% endif %}
-								</thead>
-								<tbody>
-                                    {% for depot in depots %}
-										<tr>
-											
-											
-											<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{depot.id }}"></td>
-                                            <td><a href="{{ path('depot_show', {'id': depot.id,'user_email':app.user.email}) }}">{{ depot.montant }} $</a></td>
-                                            <td>{{ depot.codeDepot }}</td>
-                                            <td>{{ depot.dateDepot ? depot.dateDepot|date('Y-m-d H:i:s') : '' }}</td>
-                                            <td>{{ depot.montantCommission }} $</td>
-                                            <td>{{ depot.expediteur.nom }}</td>
-                                            <td>{{ depot.beneficiaire.nom }}</td>
-                                            {% if is_granted("ROLE_SUPERUSER") %}
-											<td>
-												<a class="btn btn-primary" href="{{ path('depot_edit', {'id': depot.id,'user_email':app.user.email}) }}">
-													<i class="fa fa-edit"></i>
-												</a>
-											</td>
-                                            
-											<td>
-                                                {{ include('admin/depot/_delete_form.html.twig') }}
-											</td>
-                                            {% endif %}
-										</tr>
+								<th>{{ "backend.user.delete"|trans }}</th>
+								{% endif %}
+							</thead>
+							<tbody>
+								{% for depot in depots %}
+								<tr>
 
-									{% endfor %}
-								</tbody>
-							</table>
-						</div>
+
+									<td>
+										{{depot.user_depot.agence.name}}
+									</td>
+									<td>{{ depot.expediteur.nom }}</td>
+									<td>{{ depot.beneficiaire.nom }}</td>
+									<td><a href="#">{{depot.montant }} $</a></td>
+									<td>{{ depot.montantCommission }} $</td>
+									<td>{{ depot.codeDepot }}</td>
+									<td>{{ depot.dateDepot ? depot.dateDepot|date('d/m/Y à H:i:s') : '' }}</td>
+									<td>-</td>
+									<td>-</td>
+
+									{% if is_granted("ROLE_SUPERUSER") %}
+
+									<td>
+										{{ include('admin/depot/_delete_form.html.twig') }}
+									</td>
+									{% endif %}
+								</tr>
+
+								{% endfor %}
+							</tbody>
+						</table>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 {% endblock %}

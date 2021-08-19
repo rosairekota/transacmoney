@@ -16,7 +16,6 @@ class AgenceType extends AbstractType
     {
         $builder
             ->add('name', null, ['label' => `Nom de l'agence`])
-            ->add('compte', CompteType::class, ['label' => 'Solde initial'])
             ->add('description', null, ['label' => 'Adresse'])
             ->add('city', EntityType::class, [
                 'class'         => City::class,

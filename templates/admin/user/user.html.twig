@@ -61,7 +61,7 @@
 									<td><input type="checkbox" class="chkgrp" name="chkgrp[]" value="{{ user.id }}">
 									</td>
 									<td>{{ user.agence.name }}</td>
-									<td>{{ user.agence.compte.solde }}</td>
+									<td>{{ user.account.solde}}</td>
 									<td>{{ user.nomComplet }}</td>
 									<td>
 										<a class="btn btn-primary" href="{{ path('app_admin_edit_user',{'id':user.id})

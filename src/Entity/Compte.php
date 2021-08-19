@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CompteRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CompteRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CompteRepository::class)
@@ -48,6 +49,12 @@ class Compte
      * @ORM\OneToMany(targetEntity=Debit::class, mappedBy="account")
      */
     private $debits;
+
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     */
+    private $user;
+
 
     public function __construct()
     {
@@ -169,6 +176,26 @@ class Compte
                 $debit->setAccount(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
 
         return $this;
     }

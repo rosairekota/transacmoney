@@ -8,6 +8,7 @@ use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Agence;
 use App\Form\AgenceType;
+use App\Form\CompteType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -44,6 +45,7 @@ class UserFormType extends AbstractType
                     new NotBlank(["message" => $this->translator->trans('backend.global.must_not_be_empty')]),
                 ]
             ])
+            ->add('account', CompteType::class, ['label' => 'Solde initial'])
             ->add('agence', AgenceType::class);
     }
 

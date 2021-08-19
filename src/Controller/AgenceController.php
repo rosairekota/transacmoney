@@ -16,15 +16,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class AgenceController extends AbstractController
 {
-   
-     /**
+
+    /**
      * @Route("/", name="agence_index", methods={"GET"})
      * @IsGranted("ROLE_ADMINISTRATOR")
      */
     public function index(AgenceRepository $agenceRepository): Response
     {
         return $this->render('admin/agence/index.html.twig', [
-            'agences'   =>$agenceRepository->findAll()
+            'agences'   => $agenceRepository->findAll()
         ]);
     }
 
@@ -90,7 +90,7 @@ class AgenceController extends AbstractController
      */
     public function delete(Request $request, Agence $agence): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$agence->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $agence->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($agence);
             $entityManager->flush();

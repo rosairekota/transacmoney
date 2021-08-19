@@ -1,13 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends "admin/bars.html.twig" %}
 
-{% block title %}Edit Credit{% endblock %}
+{% block contenpage %}
+<div class="container">
+    <h1>Modification du solde</h1>
 
-{% block body %}
-    <h1>Edit Credit</h1>
+    {{ include('admin/credit/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    {{ include('credit/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('credit_index') }}">back to list</a>
-
-    {{ include('credit/_delete_form.html.twig') }}
+</div>
 {% endblock %}

@@ -11,6 +11,7 @@ use App\Form\UserFormType;
 use App\Form\ChangePwsdFormType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\CreditRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,7 +82,11 @@ class UserController extends BaseController
                 ->setAdmin(true)
                 ->setPassword($this->passwordEncoder->encodePassword($user, $password))
                 ->setRoles([$role->getRoleName()]);
+            $account = $user->getAccount();
+            $account->setUser($user);
+            // dd($account);
             $this->entityManager->persist($user);
+            $this->entityManager->persist($account);
             $this->entityManager->flush();
             $this->addFlash("success", $translator->trans('backend.user.add_user'));
             return $this->redirectToRoute("app_admin_users");
@@ -120,10 +125,14 @@ class UserController extends BaseController
      * @Route("/visualiser-en-detail/{id}", name="app_admin_user_agency", methods={"GET"})
      * @IsGranted("ROLE_SUPERUSER")
      */
-    public function show(User $user): Response
+    public function show(User $user, CreditRepository $creditRepo): Response
     {
+        //dd($user->getAccount()->getId());
+        $credits = $creditRepo->findBy(['account' => $user->getAccount()->getId()]);
+        // dd($credits);
         return $this->render('admin/user/show.html.twig', [
             'user' => $user,
+            'credits' => $credits,
         ]);
     }
     /**

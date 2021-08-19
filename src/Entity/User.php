@@ -105,11 +105,15 @@ class User implements UserInterface, EquatableInterface
      */
     private $retraits;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Compte::class, cascade={"persist", "remove"})
+     */
+    private $account;
 
-
-
-
-
+    /**
+     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="user",cascade={"persist"})
+     */
+    private $accounts;
 
     public function __construct()
     {
@@ -118,6 +122,7 @@ class User implements UserInterface, EquatableInterface
         $this->historiques = new ArrayCollection();
         $this->depots = new ArrayCollection();
         $this->retraits = new ArrayCollection();
+        $this->accounts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -456,5 +461,55 @@ class User implements UserInterface, EquatableInterface
         if ($user instanceof User)
             return $this->isValid() && !$this->isDeleted() && $this->getPassword() == $user->getPassword() && $this->getUsername() == $user->getUsername()
                 && $this->getEmail() == $user->getEmail();
+    }
+
+    /**
+     * Get the value of account
+     */
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    /**
+     * Set the value of account
+     *
+     * @return  self
+     */
+    public function setAccount(Compte $account)
+    {
+        $this->account = $account;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Compte[]
+     */
+    public function getAccounts(): Collection
+    {
+        return $this->accounts;
+    }
+
+    public function addAccount(Compte $account): self
+    {
+        if (!$this->accounts->contains($account)) {
+            $this->accounts[] = $account;
+            $account->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccount(Compte $account): self
+    {
+        if ($this->accounts->removeElement($account)) {
+            // set the owning side to null (unless already changed)
+            if ($account->getUser() === $this) {
+                $account->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
