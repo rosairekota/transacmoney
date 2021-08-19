@@ -35,10 +35,6 @@ class Retrait
      */
     private $date_retrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Depot::class, inversedBy="retraits",cascade={"persist"})
-     */
-    private $depot;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -70,11 +66,17 @@ class Retrait
      */
     private $code_retrait;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Depot::class, mappedBy="retrait", cascade={"persist", "remove"})
+     */
+    private $depot;
 
-    public function __construct(){
-        $this->date_retrait=new DateTime();
+
+    public function __construct()
+    {
+        $this->date_retrait = new DateTime();
     }
-    
+
 
     public function getId(): ?int
     {
@@ -117,17 +119,9 @@ class Retrait
         return $this;
     }
 
-    public function getDepot(): ?Depot
-    {
-        return $this->depot;
-    }
 
-    public function setDepot(?Depot $depot): self
-    {
-        $this->depot = $depot;
 
-        return $this;
-    }
+
 
     public function getBeneficiairePieceType(): ?string
     {
@@ -197,6 +191,28 @@ class Retrait
     public function setCodeRetrait(string $code_retrait): self
     {
         $this->code_retrait = $code_retrait;
+
+        return $this;
+    }
+
+    public function getDepot(): ?Depot
+    {
+        return $this->depot;
+    }
+
+    public function setDepot(?Depot $depot): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($depot === null && $this->depot !== null) {
+            $this->depot->setRetrait(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($depot !== null && $depot->getRetrait() !== $this) {
+            $depot->setRetrait($this);
+        }
+
+        $this->depot = $depot;
 
         return $this;
     }

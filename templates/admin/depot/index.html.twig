@@ -74,9 +74,14 @@
 									<td><a href="#">{{depot.montant }} $</a></td>
 									<td>{{ depot.montantCommission }} $</td>
 									<td>{{ depot.codeDepot }}</td>
+
 									<td>{{ depot.dateDepot ? depot.dateDepot|date('d/m/Y à H:i:s') : '' }}</td>
-									<td>-</td>
-									<td>-</td>
+									{% if depot.retrait %}
+									<td style="color: red;">Traité</td>
+									{% else %}
+									<td style="color: seagreen;">En attente</td>
+									{% endif %}
+									<td>{{depot.retrait ? depot.retrait.userRetrait.agence.name:'-'}}</td>
 
 									{% if is_granted("ROLE_SUPERUSER") %}
 
