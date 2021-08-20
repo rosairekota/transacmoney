@@ -27,7 +27,7 @@ class CompteRepository extends ServiceEntityRepository
     public function findByUser(User $user)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.userCompte = :val')
+            ->andWhere('c.user = :val')
             ->setParameter('val', $user->getId())
             ->orderBy('c.id', 'ASC')
             ->setMaxResults(2)
@@ -39,30 +39,30 @@ class CompteRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.typeCompte = :val')
             ->setParameter('val', $id)
-            ->andWhere('c.userCompte = :val')
+            ->andWhere('c.user = :val')
             ->setParameter('val', $user->getId())
             ->orderBy('c.id', 'ASC')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
     }
-    public function findByAccountTypeNumber($datas)
-    {
+    // public function findByAccountTypeNumber($datas)
+    // {
 
-        $con = $this->em->getConnection();
-        $sql = "SELECT * FROM compte d
-             WHERE user_compte_id=:id AND type_compte_id=:type_compte";
+    //     $con = $this->em->getConnection();
+    //     $sql = "SELECT * FROM compte d
+    //          WHERE user_id=:id AND type_compte_id=:type_compte";
 
-        $stmt = $con->prepare($sql);
-        $stmt->execute($datas);
-        return (object)$stmt->fetch();
-    }
+    //     $stmt = $con->prepare($sql);
+    //     $stmt->execute($datas);
+    //     return (object)$stmt->fetch();
+    // }
     public function findSumAccountBySql($datas)
     {
 
         $con = $this->em->getConnection();
         $sql = "SELECT SUM(montant_debit) as debit,SUM(montant_credit) as credit,SUM(commission_sous_agent) as commission FROM compte d
-             WHERE user_compte_id=:id";
+             WHERE user_id=:id";
 
         $stmt = $con->prepare($sql);
         $stmt->execute($datas);

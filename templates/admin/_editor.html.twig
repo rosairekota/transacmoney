@@ -1,53 +1,43 @@
 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
     <div class="menu_section">
         <ul class="nav side-menu">
-            <li><a href="{{ path('app_admin_index') }}"><i class="fa fa-home"></i> Acceuil</a>
+            <li><a href="{{ path('app_admin_index') }}"><i class="fa fa-home"></i> Tableau de Bord</a>
             </li>
-            <li><a><i class="fa fa-dollar"></i>Les {{ "backend.menu.send"|trans }}s <span
-                        class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-dollar"></i>Operation <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}"><i
-                                class="fa fa-clipboard"></i> Liste</a></li>
-                </ul>
-            </li>
-
-
-            <li><a><i class="fa fa-dollar"></i>Les {{ "backend.menu.receive"|trans }}s<span
-                        class="fa fa-chevron-down"></span></a>
-                <ul class="nav child_menu">
+                                class="fa fa-clipboard"></i> Depot</a></li>
                     <li><a href="{{ path('retrait_index',{'user_email':app.user.email}) }}"><i
-                                class="fa fa-clipboard"></i> Liste</a></li>
+                                class="fa fa-clipboard"></i> Retrait</a></li>
                 </ul>
             </li>
-            <li><a><i class="fa fa-folder-open"></i>{{ "backend.menu.account"|trans }}<span
-                        class="fa fa-chevron-down"></span></a>
-                {% if is_granted("ROLE_SUPERUSER") or is_granted("ROLE_SUPERUSER")%}
+
+
+            <li><a><i class="fa fa-refresh"></i>Rapports<span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="{{ path('compte_index')}}"><i class="fa fa-usd"></i> {{
-                            "backend.account.compte_listing"|trans }}</a></li>
+                    <li><a href="#"><i class="fa fa-clipboard"></i> Liste</a></li>
                 </ul>
-                {% else %}
+            </li>
+
+            <li><a><i class="fa fa-search"></i>Verification<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('depot_verification') }}"><i class="fa fa-clipboard"></i> Liste</a></li>
+                </ul>
+            </li>
+
+            <li><a><i class="fa fa-search"></i>{{ "backend.menu.account"|trans }}<span
+                        class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
                     <li><a href="{{ path('compte_show',{'user_email':app.user.email})}}"><i class="fa fa-usd"></i>
                             Consulter</a></li>
                 </ul>
-                {% endif %}
-            </li {% if is_granted("ROLE_SUPERUSER") %} <li><a><i class="fa fa-folder-open"></i>{{
-                "backend.menu.account"|trans }}<span class="fa fa-chevron-down"></span></a>
-            {% if is_granted("ROLE_SUPERUSER") or is_granted("ROLE_SUPERUSER")%}
-            <ul class="nav child_menu">
-                <li><a href="{{ path('compte_index')}}"><i class="fa fa-usd"></i> {{
-                        "backend.account.compte_listing"|trans }}</a></li>
-            </ul>
-            {% else %}
-            <ul class="nav child_menu">
-                <li><a href="{{ path('compte_show',{'user_email':app.user.email})}}"><i class="fa fa-usd"></i>
-                        Consulter</a></li>
-            </ul>
-            {% endif %}
-            </li>
-            {% endif %}
 
+            </li>
+            <li><a><i class="fa fa-dollar"></i>Commissions<span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="#"><i class="fa fa-clipboard"></i> Liste</a></li>
+                </ul>
+            </li>
 
         </ul>
     </div>

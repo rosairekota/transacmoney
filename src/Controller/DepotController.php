@@ -59,24 +59,24 @@ class DepotController extends AbstractController
         $form->handleRequest($request);
         $accountUser = $accountUserRepot->findByUser($user);
         $accountAdmin = $accountUserRepot->findByUser($userAdmin);
-        $userByAccountType = $accountUserRepot->findByAccountTypeNumber(['id' => $user->getId(), 'type_compte' => 1]);
+
+        $userByAccountType = new Compte();
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dd($depot);
-
-            if ($userByAccountType->solde < 0 || $userByAccountType->solde < $depot->getMontant()) {
-                if ($userByAccountType->solde < 0) {
+            if ($accountUser[0]->getSolde() < 0 || $accountUser[0]->getSolde() < $depot->getMontant()) {
+                if ($accountUser[0]->getSolde() < 0) {
                     $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
-                } elseif ($userByAccountType->solde < $depot->getMontant()) {
+                } elseif ($accountUser[0]->getSolde() < $depot->getMontant()) {
                     $this->addFlash("danger", "Dépot non autorisé. Votre solde est inferieur au montant du dépot. Veuillez contacter l'administrateur.");
                 }
             } else {
 
-                dd($userByAccountType->solde);
+                $newUserSold = floatVal($accountUser[0]->getSolde() - $depot->getMontant());
 
-                $montantCommission = $depot->getMontant() * 0.025;
-
+                $montantCommission = $depot->getMontant() * 0.05;
+                dd($montantCommission);
+                $userAdmin[0]->setSolde($userAdmin[0]->getSolde() + $depot->getMontant());
                 $montantReel = $depot->getMontant() - floatval($montantCommission);
 
                 $depot->setMontant($montantReel > 100 ? round($montantReel) : $montantReel);
@@ -158,6 +158,16 @@ class DepotController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    /**
+     * @Route("depot_verification/", name="depot_verification", methods={"GET"})
+     * @IsGranted("ROLE_WRITER")
+     */
+    public function verification(): Response
+    {
+
+        return $this->render('admin/depot/verification.html.twig', []);
+    }
+
 
     /**
      * @Route("/{id}/{user_email}-@j9a8j7k94", name="depot_delete", methods={"DELETE"})
