@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Credit;
 use App\Form\CreditType;
+use App\Services\CreditService;
 use App\Repository\CreditRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ class CreditController extends AbstractController
     /**
      * @Route("/fond-agence", name="credit_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, CreditService $creditService): Response
     {
         $credit = new Credit();
         $form = $this->createForm(CreditType::class, $credit);
@@ -38,16 +39,7 @@ class CreditController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $credit->setCreditCode(substr(str_shuffle(\sha1(str_repeat($credit->getAccount()->getId(), 5))), 1, 15));
-            $account = $credit->getAccount();
-
-            $credit->setHoldSolde($account->getSolde());
-            $acountNewSold = $credit->getCreditAmount() + $credit->getAccount()->getSolde();
-            $account->setSolde($acountNewSold);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($credit);
-            $entityManager->persist($account);
-            $entityManager->flush();
+            $creditService->create($credit);
 
             return $this->redirectToRoute('credit_index');
         }
@@ -77,27 +69,7 @@ class CreditController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //     $account = $credit->getAccount();
-            //     $acountNewSold = 0;
-            //     $creditHold = $creditRepo->findById($credit->getId());
-            //     if ($creditHold->getCreditAmount() > $credit->getCreditAmount()) {
-            //         $newAmount = $creditHold->getCreditAmount() - $credit->getCreditAmount();
-            //         $credit->setCreditAmount($newAmount);
-            //         dd($newAmount);
-            //         $account->setSolde($credit->getAccount()->getSolde() - $newAmount);
-            //     } else if ($creditHold->getCreditAmount() == $credit->getCreditAmount()) {
 
-            //         $credit->setCreditAmount($credit->getCreditAmount());
-            //         dd("naza awa2");
-            //     } else {
-            //         $acountNewSold = $credit->getAccount()->getSolde() + $credit->getCreditAmount();
-            //         dd("ici 3");
-            //     }
-
-            //     //$credit->setHoldSolde($account->getSolde());
-            // $entityManager = $this->getDoctrine()->getManager();
-            //     $entityManager->persist($credit);
-            //     $entityManager->persist($account);
             $this->getDoctrine()->getManager()->flush();
             return $this->redirectToRoute('credit_index');
         }

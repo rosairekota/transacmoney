@@ -104,7 +104,7 @@ class DepotController extends AbstractController
                 $depot->setMontantCommission($montantCommission);
 
                 //6. On genere le code
-                $codeSecret = str_shuffle($depot->getExpediteur()->getTelephone());
+                $codeSecret = str_shuffle(substr(str_shuffle(\md5(str_repeat($depot->getExpediteur()->getTelephone(), 5))), 1, 10));
 
                 //on persist les objets
                 $entityManager = $this->getDoctrine()->getManager();

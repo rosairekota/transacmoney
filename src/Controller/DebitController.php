@@ -2,9 +2,15 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Debit;
+use App\Entity\Credit;
 use App\Form\DebitType;
+use App\Services\CreditService;
 use App\Repository\DebitRepository;
+use App\Controller\CreditController;
+use App\Repository\CompteRepository;
+use App\Repository\CreditRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,18 +36,32 @@ class DebitController extends AbstractController
     /**
      * @Route("/new", name="debit_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, CompteRepository $compteRepository): Response
     {
         $debit = new Debit();
         $form = $this->createForm(DebitType::class, $debit);
         $form->handleRequest($request);
-
+        $counter = 1;
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($debit);
-            $entityManager->flush();
+            $accompteUserDebit = $compteRepository->findOneBy(['numero_compte' => $debit->getAccount_number()]);
+            if (!empty($accompteUserDebit)) {
 
-            return $this->redirectToRoute('debit_index');
+                if ($accompteUserDebit->getSolde() > floatval($debit->getAmount())) {
+                    $debit->setAccount($accompteUserDebit);
+                    $debit->setStatus(false);
+
+                    $debit->setDebitCode(substr(str_shuffle(\md5(str_repeat($debit->getAccount_number(), 5))), 1, 10));
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($debit);
+                    $entityManager->flush();
+                    $this->addFlash('success', "Votre demande a été envoyée avec succèss");
+                    return $this->redirectToRoute('debit_new');
+                } else {
+                    $this->addFlash('danger', "Veuillez inserer un montant inferieur ou egal à votre solde");
+                }
+            } else {
+                $this->addFlash('danger', "le numero de ce compte n'existe pas");
+            }
         }
 
         return $this->render('admin/debit/new.html.twig', [
@@ -51,13 +71,38 @@ class DebitController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="debit_show", methods={"GET"})
+     * @Route("/valider-{id}", name="debit_show", methods={"GET"})
      */
-    public function show(Debit $debit): Response
+    public function show(Debit $debit, DebitRepository $debitRepository, CreditService $creditService, CompteRepository $compteRepository): Response
     {
-        return $this->render('admin/debit/show.html.twig', [
-            'debit' => $debit,
-        ]);
+        // initialisation
+        $credit = new Credit();
+
+
+        // on traite le paiment de l'agence demandeuse
+
+        $accountWantedAgency = $debit->getAccount();
+        $account = $compteRepository->findOneById($accountWantedAgency->getId());
+        if ($debit->getAmount() < $account->getSolde()) {
+            $account->setSolde($account->getSolde() - $debit->getAmount());
+            $debit->setStatus(true);
+            $debit->getDebitDate(new DateTime());
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->persist($account);
+            $entityManager->persist($debit);
+
+            $credit->setCreditAmount(floatval($debit->getAmount()));
+            $credit->setAccount($debit->getUser()->getAccount());
+            $entityManager->flush();
+            $creditService->create($credit);
+            $this->addFlash('success', "Demande validée avec success!");
+            return $this->redirectToRoute('debit_index');
+        } else {
+            # code...
+        }
+
+        return $this->json(["message" => "success", "value" => true]);
     }
 
     /**

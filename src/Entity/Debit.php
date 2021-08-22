@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\DebitRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DebitRepository;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=DebitRepository::class)
@@ -19,6 +22,7 @@ class Debit
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive(message="le Montant doit être positive !")
      */
     private $amount;
 
@@ -43,9 +47,25 @@ class Debit
     private $debit_date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="debits")
+     * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="debits",cascade={"persist"})
      */
     private $account;
+
+    /**
+     * @var string
+     * @Assert\NotNull(message="Pas de champ vide! inserer un numéro valide svp")
+     */
+    public $account_number;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="debits",cascade={"persist"})
+     */
+    private $user;
+
+    public function __construct()
+    {
+        $this->request_date = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +140,42 @@ class Debit
     public function setAccount(?Compte $account): self
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of account_number
+     *
+     * @return  string
+     */
+    public function getAccount_number()
+    {
+        return $this->account_number;
+    }
+
+    /**
+     * Set the value of account_number
+     *
+     * @param  string  $account_number
+     *
+     * @return  self
+     */
+    public function setAccount_number(string $account_number)
+    {
+        $this->account_number = $account_number;
 
         return $this;
     }

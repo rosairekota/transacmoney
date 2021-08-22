@@ -11,6 +11,7 @@ use App\Form\UserFormType;
 use App\Form\ChangePwsdFormType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\DebitRepository;
 use App\Repository\CreditRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,14 +126,16 @@ class UserController extends BaseController
      * @Route("/admin/agence/visualiser/{id}-en-detail", name="app_admin_user_agency", methods={"GET"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function show(User $user, CreditRepository $creditRepo): Response
+    public function show(User $user, CreditRepository $creditRepo, DebitRepository $debitRepo): Response
     {
         //dd($user->getAccount()->getId());
         $credits = $creditRepo->findBy(['account' => $user->getAccount()->getId()]);
+        $debits = $debitRepo->findBy(['account' => $user->getAccount()->getId()]);
         // dd($credits);
         return $this->render('admin/user/show.html.twig', [
             'user' => $user,
             'credits' => $credits,
+            'debits' => $debits
         ]);
     }
     /**

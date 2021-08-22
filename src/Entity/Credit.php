@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CreditRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CreditRepository::class)
@@ -20,6 +21,7 @@ class Credit
 
     /**
      * @ORM\Column(type="float")
+     *  @Assert\Positive(message="le Montant doit être positive")
      */
     private $credit_amount;
 
