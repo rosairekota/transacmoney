@@ -50,6 +50,11 @@ class Credit
      */
     private $hold_solde;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="credits")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -128,6 +133,18 @@ class Credit
     public function setHoldSolde(?float $hold_solde): self
     {
         $this->hold_solde = $hold_solde;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

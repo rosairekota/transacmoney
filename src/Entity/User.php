@@ -120,6 +120,11 @@ class User implements UserInterface, EquatableInterface
      */
     private $debits;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Credit::class, mappedBy="user")
+     */
+    private $credits;
+
     public function __construct()
     {
         $this->blogPosts = new ArrayCollection();
@@ -129,6 +134,7 @@ class User implements UserInterface, EquatableInterface
         $this->retraits = new ArrayCollection();
         $this->accounts = new ArrayCollection();
         $this->debits = new ArrayCollection();
+        $this->credits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -543,6 +549,36 @@ class User implements UserInterface, EquatableInterface
             // set the owning side to null (unless already changed)
             if ($debit->getUser() === $this) {
                 $debit->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Credit[]
+     */
+    public function getCredits(): Collection
+    {
+        return $this->credits;
+    }
+
+    public function addCredit(Credit $credit): self
+    {
+        if (!$this->credits->contains($credit)) {
+            $this->credits[] = $credit;
+            $credit->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCredit(Credit $credit): self
+    {
+        if ($this->credits->removeElement($credit)) {
+            // set the owning side to null (unless already changed)
+            if ($credit->getUser() === $this) {
+                $credit->setUser(null);
             }
         }
 

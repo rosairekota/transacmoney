@@ -23,6 +23,7 @@
                                 <th>CODE RECHARGEMENT</th>
                                 <th>ANCIEN SOLDE</th>
                                 <th>NOUVEAU SOLDE</th>
+                                <th>Agence Envoyeuse</th>
                                 {% if is_granted("ROLE_SUPERUSER") %}
                                 <th>SUPPRIMER</th>
                                 {% endif %}
@@ -38,6 +39,7 @@
                                     <td>{{ credit.account.solde }}
 
                                     </td>
+                                    <td>{{ credit.user.agence.name ? credit.user.agence.name : ''}}</td>
                                     {% if is_granted("ROLE_SUPERUSER") %}
 
                                     <td> <a href="{{ path('credit_delete', {'id': credit.id}) }}"

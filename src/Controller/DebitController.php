@@ -94,6 +94,7 @@ class DebitController extends AbstractController
 
             $credit->setCreditAmount(floatval($debit->getAmount()));
             $credit->setAccount($debit->getUser()->getAccount());
+            $credit->setUser($debit->getAccount()->getUser());
             $entityManager->flush();
             $creditService->create($credit);
             $this->addFlash('success', "Demande validée avec success!");

@@ -12,13 +12,15 @@
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
-                <div class="col-md-6 col-sm-12">
+                <div class="col-md-6 col-sm-12" style="color: #2a3f54;">
                     <p>Nom de l'agence :<strong>{{user.agence.name}}</strong> </p>
                     <p>Responsable :{{user.nomComplet}}</p>
                     <p>Email du Responsable :{{user.email}}</p>
                     <p>Ville :{{user.agence.city.name}}</p>
-                    <p>Solde :{{user.account.solde}}</p>
                     <p>Contact :{{user.agence.contact}}</p>
+                    <hr>
+                    <p>Numéro du Compte :<strong>{{user.account.numeroCompte}}</strong> </p>
+                    <p>Solde :{{user.account.solde}}</p>
                     <p>Date de creation :{{user.account.dateOuverture|date("m/d/Y")}}</p>
 
                 </div>
