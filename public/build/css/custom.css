@@ -1301,10 +1301,12 @@
 .nav_menu {
   float: left;
   background: #2a3f54;
+  box-shadow: 0 5px 20px 0 rgba(0,0,0,.2), 0 13px 24px -11px#d4dadf;
   border-bottom: 1px solid #2a3f54;
   margin-bottom: 10px;
   width: 100%;
-  color: white !important;
+  color: #fff; 
+
   position: relative;
 }
 

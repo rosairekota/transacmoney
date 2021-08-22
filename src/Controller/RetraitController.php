@@ -126,11 +126,10 @@ class RetraitController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $retrait->setDepot($depotSession['depot'][0]);
+            // $retrait->setDepot($depotSession['depot'][0]);
             $datas = [
                 "depot_id" => $depotSession['depot'][0]->getId(),
-                "user_retrait_id" => $user->getId(),
+                "user_retrait" => $user->getId(),
                 "montant_retire" => $retrait->getMontantRetire(),
                 "beneficiaire_piece_type" => $retrait->getBeneficiairePieceType(),
                 "beneficiaire_piece_numero" => $retrait->getBeneficiairePieceNumero(),
@@ -138,46 +137,29 @@ class RetraitController extends AbstractController
                 "code_retrait" => $retrait->getCodeRetrait()
             ];
 
-            $montantCommission = $depotSession['depot'][0]->getMontantCommission();
-            $credit = $account[0]->getMontantDebit() - $retrait->getMontantRetire();
-
-            $account[0]->setMontantCredit($retrait->getMontantRetire() + $account[0]->getMontantCredit());
-            $account[0]->setMontantDebit(floor($credit));
-            $solde = (floatval($account[0]->getMontantDebit() - $account[0]->getMontantCredit()));
-            //dd($solde);
-            $account[0]->setSolde($solde <= 0 ? 0 : $solde);
-            // recherche role user
-            if ($user->getRoles()[0] == 'ROLE_WRITER') {
-
-                $salaireSurCommission = round($montantCommission * 0.005, 3);
-
-                $montantCommissionApres = floor($montantCommission - $salaireSurCommission);
-
-                $depotSession['depot'][0]->setMontantCommission($montantCommissionApres);
-
-                $depoUpdate = $depoRepo->updateAmountBySql(
-                    [
-                        'montant' => $montantCommissionApres,
-                        'code_depot' => $retrait->getCodeRetrait()
-                    ]
-                );
-                // on verifie si le depot a ete mise a jour
-                if (!empty($depoUpdate)) {
-
-                    $account[0]->setCommissionSousAgent($salaireSurCommission);
-
-                    $account[0]->setUserCompte($user);
-
-
-                    $entityManager->flush();
+            $insertRetrait = $retraitRepository->insertBySql($datas);
+            if (!empty($insertRetrait)) {
+                $newRetrait = $retraitRepository->findOneBy(['code_retrait' => $retrait->getCodeRetrait()]);
+                if (!empty($newRetrait)) {
+                    $depoUpdate = $depoRepo->updateAmountBySql(['retrait' => $newRetrait->getId(), 'code_depot' => $retrait->getCodeRetrait()]);
+                    //     // on verifie si le depot a ete mise a jour
+                    if (!empty($depoUpdate)) {
+                    }
                 }
+            } else {
+                $this->addFlash('warning', "Echec d'insertion");
             }
-            $retraitRepository->insertBySql($datas);
+
+            // $retrait = $depotSession['depot'][0]->getRetrait()->setUserRetrait($user);
+            // //dd($retrait);
+            // // $entityManager->persist($depotSession['depot'][0]);
+            // $entityManager->persist($retrait);
+            // $entityManager->flush();
+            //     }
+            // }
+            // $retraitRepository->insertBySql($datas);
             $idDepot = $depotSession['depot'][0]->getId();
             unset($depotSession);
-
-
-
 
             // return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
             return $this->redirectToRoute('retrait_report', ['id' => $idDepot]);

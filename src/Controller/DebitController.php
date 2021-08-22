@@ -22,7 +22,7 @@ class DebitController extends AbstractController
      */
     public function index(DebitRepository $debitRepository): Response
     {
-        return $this->render('debit/index.html.twig', [
+        return $this->render('admin/debit/index.html.twig', [
             'debits' => $debitRepository->findAll(),
         ]);
     }
@@ -44,7 +44,7 @@ class DebitController extends AbstractController
             return $this->redirectToRoute('debit_index');
         }
 
-        return $this->render('debit/new.html.twig', [
+        return $this->render('admin/debit/new.html.twig', [
             'debit' => $debit,
             'form' => $form->createView(),
         ]);
@@ -55,7 +55,7 @@ class DebitController extends AbstractController
      */
     public function show(Debit $debit): Response
     {
-        return $this->render('debit/show.html.twig', [
+        return $this->render('admin/debit/show.html.twig', [
             'debit' => $debit,
         ]);
     }
@@ -74,7 +74,7 @@ class DebitController extends AbstractController
             return $this->redirectToRoute('debit_index');
         }
 
-        return $this->render('debit/edit.html.twig', [
+        return $this->render('admin/debit/edit.html.twig', [
             'debit' => $debit,
             'form' => $form->createView(),
         ]);

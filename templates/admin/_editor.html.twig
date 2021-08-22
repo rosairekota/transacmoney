@@ -3,40 +3,42 @@
         <ul class="nav side-menu">
             <li><a href="{{ path('app_admin_index') }}"><i class="fa fa-home"></i> Tableau de Bord</a>
             </li>
-            <li><a><i class="fa fa-dollar"></i>Operation <span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-dollar"></i>Opérations <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}"><i
-                                class="fa fa-clipboard"></i> Depot</a></li>
-                    <li><a href="{{ path('retrait_index',{'user_email':app.user.email}) }}"><i
-                                class="fa fa-clipboard"></i> Retrait</a></li>
+                    <li><a href="{{ path('depot_new',{'user_email':app.user.email}) }}"><i class="fa fa-share"></i>
+                            Nouveau Dépot</a></li>
+                    <li><a href="{{ path('retrait_search') }}"><i class="fa fa-reply-all"></i>
+                            Nouveau Retrait</a></li>
+                </ul>
+            </li>
+            <li><a><i class="fa fa-line-chart"></i>Rapports <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    <li><a href="{{ path('depot_index',{'user_email':app.user.email}) }}">
+                            Dépot</a></li>
+                    <li><a href="{{ path('retrait_index',{'user_email':app.user.email}) }}">
+                            Retrait</a></li>
                 </ul>
             </li>
 
 
-            <li><a><i class="fa fa-refresh"></i>Rapports<span class="fa fa-chevron-down"></span></a>
-                <ul class="nav child_menu">
-                    <li><a href="#"><i class="fa fa-clipboard"></i> Liste</a></li>
-                </ul>
-            </li>
-
-            <li><a><i class="fa fa-search"></i>Verification<span class="fa fa-chevron-down"></span></a>
-                <ul class="nav child_menu">
-                    <li><a href="{{ path('depot_verification') }}"><i class="fa fa-clipboard"></i> Liste</a></li>
-                </ul>
-            </li>
-
-            <li><a><i class="fa fa-search"></i>{{ "backend.menu.account"|trans }}<span
+            <li><a href="{{ path('depot_verification') }}"><i class="fa fa-search"></i>Verification<span
                         class="fa fa-chevron-down"></span></a>
-                <ul class="nav child_menu">
-                    <li><a href="{{ path('compte_show',{'user_email':app.user.email})}}"><i class="fa fa-usd"></i>
-                            Consulter</a></li>
-                </ul>
-
             </li>
-            <li><a><i class="fa fa-dollar"></i>Commissions<span class="fa fa-chevron-down"></span></a>
+            <li><a><i class="fa fa-shopping-cart"></i>Compte <span class="fa fa-chevron-down"></span></a>
                 <ul class="nav child_menu">
-                    <li><a href="#"><i class="fa fa-clipboard"></i> Liste</a></li>
+                    <li><a href="{{ path('app_admin_user_agency',{'id':app.user.id})}}">
+                            Mon Solde</a></li>
+                    <li><a href="{{ path('app_admin_user_agency',{'id':app.user.id})}}#rechargement">
+                            Rechargements</a>
+                    </li>
+                    <li><a href="{{ path('app_admin_user_agency',{'id':app.user.id})}}#payement">
+                            Demander un payement</a>
+                    </li>
                 </ul>
+            </li>
+
+            <li><a a href="{{ path('depot_comission',{'user_email':app.user.email}) }}"><i
+                        class="fa fa-refresh"></i>Commissions<span class="fa fa-chevron-down"></span></a>
             </li>
 
         </ul>

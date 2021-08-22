@@ -122,8 +122,8 @@ class UserController extends BaseController
     }
 
     /**
-     * @Route("/visualiser-en-detail/{id}", name="app_admin_user_agency", methods={"GET"})
-     * @IsGranted("ROLE_SUPERUSER")
+     * @Route("/admin/agence/visualiser/{id}-en-detail", name="app_admin_user_agency", methods={"GET"})
+     * @IsGranted("ROLE_WRITER")
      */
     public function show(User $user, CreditRepository $creditRepo): Response
     {

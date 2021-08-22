@@ -64,7 +64,7 @@ class DepotRepository extends ServiceEntityRepository
 
         $con = $this->em->getConnection();
         $sql = "UPDATE depot d
-              SET d.montant_commission=:montant
+              SET d.retrait_id=:retrait
              WHERE d.code_depot=:code_depot";
 
         $con->prepare($sql);

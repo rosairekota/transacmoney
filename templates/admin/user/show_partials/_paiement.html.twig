@@ -13,9 +13,16 @@
             </div>
             <div class="x_content">
                 <div class="col-md-12">
+                    {% if not is_granted("ROLE_SUPERUSER") %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-success" href="#">Demader un paiement </a>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="row">
                         <table id="example" class="display table table-striped table-bordered dataminetables">
-                            <thead>
+                            <thead id="payement">
                                 <th>N°</th>
                                 <th>MONTANT </th>
                                 <th>CODE RETRAIT</th>
