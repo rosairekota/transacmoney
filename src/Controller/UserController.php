@@ -162,7 +162,7 @@ class UserController extends BaseController
 
     /**
      * @Route("/admin/user/changePassword",name="app_admin_changepswd")
-     * @IsGranted("ROLE_SUPERUSER")
+     * @IsGranted("ROLE_WRITER")
      */
     public function changePswd(Request $request, TranslatorInterface $translator)
     {

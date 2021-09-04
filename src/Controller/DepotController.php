@@ -90,7 +90,7 @@ class DepotController extends AbstractController
 
                 // 2. On calcul la commission
 
-                $montantCommission = floatval($depot->getMontant()) * 0.05;
+                $montantCommission = floatval($depot->getMontant()) * 0.005;
 
                 // 3. On Increment le compte de l'admin
                 $accountAdmin[0]->setSolde($accountAdmin[0]->getSolde() + $depot->getMontant());

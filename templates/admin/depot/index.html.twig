@@ -55,8 +55,11 @@
 								<th>Code Dépot</th>
 								<th>Date Dépot</th>
 								<th>Statut</th>
-								<th>Agence Reçu</th>
+								<th>Agence </th>
 								{% if is_granted("ROLE_SUPERUSER") %}
+
+
+
 
 								<th>{{ "backend.user.delete"|trans }}</th>
 								{% endif %}
@@ -76,10 +79,12 @@
 									<td>{{ depot.codeDepot }}</td>
 
 									<td>{{ depot.dateDepot ? depot.dateDepot|date('d/m/Y à H:i:s') : '' }}</td>
+									{% if is_granted("ROLE_SUPERUSER") %}
 									{% if depot.retrait %}
 									<td style="color: red;">Traité</td>
 									{% else %}
 									<td style="color: seagreen;">En attente</td>
+									{% endif %}
 									{% endif %}
 									<td>{{depot.retrait ? depot.retrait.userRetrait.agence.name:'-'}}</td>
 

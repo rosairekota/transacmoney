@@ -48,12 +48,13 @@
                                     <td>{{ i }}</td>
                                     <td>{{ debit.amount }}</td>
                                     <td>{{ debit.requestDate ? debit.requestDate|date('d/m/Y à H:i:s') : '' }}</td>
+                                    {% if is_granted('ROLE_SUPERUSER') %}
                                     {% if debit.status %}
                                     <td style="color: red;">Traitée</td>
                                     {% else %}
                                     <td style="color: seagreen;">En attente</td>
                                     {% endif %}
-
+                                    {% endif %}
                                     <td>{{ debit.debitDate ? debit.debitDate|date('d/m/Y à H:i:s') : '' }}</td>
                                     <td>{{ debit.account.user.agence.name }}</td>
                                     <td>{{ debit.user.agence.name }}</td>
