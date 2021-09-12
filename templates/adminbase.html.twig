@@ -38,6 +38,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 <!-- include summernote css/js -->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 {% endblock %}
 
 {% block bodyclass %} class="nav-md" {% endblock %}
@@ -105,26 +107,32 @@
 <script src="{{ asset('vendors/jquery.tagsinput/src/jquery.tagsinput.js') }}"></script>
 <!-- Summernote -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
 <script>
-    var dataminetables = $('.dataminetables').dataTable({
+
+
+
+    let dataminetables = $('.dataminetables').dataTable({
         "columnDefs": [
             { "orderable": false, "targets": 0 }
         ]
     });
 
-    var datasorttables = $('.dataminetables').DataTable();
+    let datasorttables = $('.dataminetables').DataTable();
 
-    var datanotminetables = $('.datanotminetables').dataTable({
+    let datanotminetables = $('.datanotminetables').dataTable({
     });
 
-    var datanotsorttables = $('.datanotminetables').DataTable();
+    let datanotsorttables = $('.datanotminetables').DataTable();
 
 
     $(document).on("click", ".activate-link", function (e) {
         /*$(".activate-link").click(function(e) {*/
         e.preventDefault();
-        var btn = $(this);
-        var link = $(this).attr("href");
+        let btn = $(this);
+        let link = $(this).attr("href");
+
+
         $.ajax({
             url: link,
             method: 'POST',
@@ -159,8 +167,8 @@
         /*$(".activate-link").click(function(e) {*/
         e.preventDefault();
         if (confirm("Voulez vous vraiment supprimer ?")) {
-            var btn = $(this);
-            var link = $(this).attr("href");
+            let btn = $(this);
+            let link = $(this).attr("href");
             $.ajax({
                 url: link,
                 method: 'POST',
@@ -169,7 +177,7 @@
                         if (data.value === true) {
                             notif("success", "Reussi", "Suprimmé");
                             // Get the position of the current data from the node
-                            var aPos = dataminetables.fnGetPosition(btn.closest('tr').get(0));
+                            let aPos = dataminetables.fnGetPosition(btn.closest('tr').get(0));
                             // Delete the row
                             dataminetables.fnDeleteRow(aPos);
                         } else if (data.value === false) {
@@ -210,11 +218,11 @@
 
     $("#grpaction").submit(function (e) {
         e.preventDefault();
-        var ids = [];
-        var action = $("#action_select").val();
+        let ids = [];
+        let action = $("#action_select").val();
 
         datasorttables.rows().every(function (rowIdx, tableLoop, rowLoop) {
-            var data = this.node();
+            let data = this.node();
             if ($(data).find("input[name='chkgrp\[\]']").prop('checked')) {
                 ids.push($(this.data()[0]).val());
             }
@@ -225,7 +233,7 @@
             alert("{{'backend.global.choice_action'|trans }}")
         } else {
             if (confirm("{{"backend.global.please_confirm"|trans }}")) {
-                var link = $(this).attr("action");
+                let link = $(this).attr("action");
                 ;
                 $.ajax({
                     url: link,
@@ -265,11 +273,12 @@
     {% endblock %}
 
     $('.custom-file-input').on('change', function (event) {
-        var inputFile = event.currentTarget;
+        let inputFile = event.currentTarget;
         $(inputFile).parent()
             .find('.custom-file-label')
             .html(inputFile.files[0].name);
     });
 </script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 {% endblock %}

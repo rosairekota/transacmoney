@@ -68,14 +68,22 @@ class Depot
      */
     private $montantCommission;
 
+
+
     /**
-     * @ORM\OneToMany(targetEntity=Retrait::class, mappedBy="depot")
+     * @ORM\OneToOne(targetEntity=Retrait::class, inversedBy="depot", cascade={"persist", "remove"})
      */
-    private $retraits;
+    private $retrait;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
+
 
     public function __construct()
     {
-        $this->retraits = new ArrayCollection();
         $this->date_depot = new DateTime();
     }
 
@@ -170,35 +178,6 @@ class Depot
         return $this;
     }
 
-    /**
-     * @return Collection|Retrait[]
-     */
-    public function getRetraits(): Collection
-    {
-        return $this->retraits;
-    }
-
-    public function addRetrait(Retrait $retrait): self
-    {
-        if (!$this->retraits->contains($retrait)) {
-            $this->retraits[] = $retrait;
-            $retrait->setDepot($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRetrait(Retrait $retrait): self
-    {
-        if ($this->retraits->removeElement($retrait)) {
-            // set the owning side to null (unless already changed)
-            if ($retrait->getDepot() === $this) {
-                $retrait->setDepot(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * Get the value of user_depot
@@ -216,6 +195,30 @@ class Depot
     public function setUser_depot(?User $user_depot)
     {
         $this->user_depot = $user_depot;
+
+        return $this;
+    }
+
+    public function getRetrait(): ?Retrait
+    {
+        return $this->retrait;
+    }
+
+    public function setRetrait(?Retrait $retrait): self
+    {
+        $this->retrait = $retrait;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

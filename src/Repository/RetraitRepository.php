@@ -17,12 +17,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class RetraitRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $em;
-    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $em)
     {
         parent::__construct($registry, Retrait::class);
-        $this->em=$em;
+        $this->em = $em;
     }
-    
+
     public function findByEmail(int $id)
     {
         return $this->getQueryBuilder()
@@ -31,8 +31,7 @@ class RetraitRepository extends ServiceEntityRepository
             ->orderBy('r.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
     // /**
     //  * @return Retrait[] Returns an array of Retrait objects
@@ -41,40 +40,38 @@ class RetraitRepository extends ServiceEntityRepository
     public function findSecretCode(Search $search)
     {
         return $this->getQueryBuilder()
-            ->select('user','r')
-            ->join('r.user_retrait','user')
-            ->select('depot','r')
-            ->join('r.depot','depot')
+            ->select('user', 'r')
+            ->join('r.user_retrait', 'user')
+            ->select('depot', 'r')
+            ->join('r.depot', 'depot')
             ->andWhere('r.code_retrait = :val')
             ->setParameter('val', $search->code_secret)
             ->getQuery()
             ->getResult();
-        
     }
     public function findSecretCodeSql($search)
     {
-            $con=$this->em->getConnection();
-             $sql="SELECT * FROM retrait d
+        $con = $this->em->getConnection();
+        $sql = "SELECT * FROM retrait d
              WHERE d.code_retrait=:code_retrait";
-        
-            $stmt=$con->prepare($sql);
-            $stmt->execute($search);
-           return $stmt->fetchAllAssociative();
-        
+
+        $stmt = $con->prepare($sql);
+        $stmt->execute($search);
+        return $stmt->fetchAllAssociative();
     }
 
-    public function insertBySql($datas=[])
+    public function insertBySql($datas = [])
     {
-            $con=$this->em->getConnection();
-            
-             $sql="INSERT INTO retrait(depot_id,user_retrait_id,montant_retire,date_retrait,beneficiaire_piece_type,beneficiaire_piece_numero,libelle,code_retrait) 
-             VALUES(:depot_id, :user_retrait_id, :montant_retire, NOW(), :beneficiaire_piece_type, :beneficiaire_piece_numero, :libelle, :code_retrait)";
-            $con->prepare($sql);
-            $result= $con->executeQuery($sql,$datas);
-            return $result;
-        
+        $con = $this->em->getConnection();
+
+        $sql = "INSERT INTO retrait(user_retrait_id,montant_retire,date_retrait,beneficiaire_piece_type,beneficiaire_piece_numero,libelle,code_retrait) 
+             VALUES(:user_retrait, :montant_retire, NOW(), :beneficiaire_piece_type, :beneficiaire_piece_numero, :libelle, :code_retrait)";
+        $con->prepare($sql);
+        $result = $con->executeQuery($sql, $datas);
+        return $result;
     }
-    private function getQueryBuilder(){
+    private function getQueryBuilder()
+    {
         return $this->createQueryBuilder('r');
     }
     /*

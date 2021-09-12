@@ -30,7 +30,7 @@ class City
     private $abbrev_name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Agence::class, mappedBy="city")
+     * @ORM\OneToMany(targetEntity=Agence::class, mappedBy="city", cascade={"persist"})
      */
     private $agences;
 

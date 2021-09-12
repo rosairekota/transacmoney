@@ -64,7 +64,7 @@ class DepotRepository extends ServiceEntityRepository
 
         $con = $this->em->getConnection();
         $sql = "UPDATE depot d
-              SET d.montant_commission=:montant
+              SET d.retrait_id=:retrait, d.status=:status
              WHERE d.code_depot=:code_depot";
 
         $con->prepare($sql);
@@ -91,7 +91,16 @@ class DepotRepository extends ServiceEntityRepository
         $stmt->execute($datas);
         return $stmt->fetchAllAssociative();
     }
+    public function selectPendingRetrait()
+    {
+        $con = $this->em->getConnection();
+        $sql = "SELECT * FROM depot d
+             WHERE d.status=false";
 
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAllAssociative();
+    }
     private function getQueryBuilder()
     {
         return $this->createQueryBuilder('d');
