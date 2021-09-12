@@ -75,6 +75,11 @@ class Depot
      */
     private $retrait;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
 
 
     public function __construct()
@@ -202,6 +207,18 @@ class Depot
     public function setRetrait(?Retrait $retrait): self
     {
         $this->retrait = $retrait;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

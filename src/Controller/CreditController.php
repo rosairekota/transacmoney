@@ -6,6 +6,7 @@ use App\Entity\Credit;
 use App\Form\CreditType;
 use App\Services\CreditService;
 use App\Repository\CreditRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,14 +32,15 @@ class CreditController extends AbstractController
     /**
      * @Route("/fond-agence", name="credit_new", methods={"GET","POST"})
      */
-    public function new(Request $request, CreditService $creditService): Response
+    public function new(Request $request, CreditService $creditService, UserRepository $userRepo): Response
     {
         $credit = new Credit();
         $form = $this->createForm(CreditType::class, $credit);
         $form->handleRequest($request);
+        $user = $userRepo->findOneByUsernameOrEmail("admin@transacmoney.com");
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            $credit->setUser($user);
             $creditService->create($credit);
 
             return $this->redirectToRoute('credit_index');

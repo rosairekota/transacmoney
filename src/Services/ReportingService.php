@@ -23,15 +23,23 @@ class ReportingService extends Command
     }
 
 
-    public function reportView(Depot $depot): string
+    public function render(Depot $depot,?string $route): string
     {
-        // dd($depot);
-        $pdf = new Html2Pdf('L', 'A6', 'fr', true, 'UTF-8', 0);
-        $html = $this->twig->render('admin/retrait/report.html.twig', [
-            'depot' => $depot,
-        ]);
-
-        $pdf->writeHTML($html);
+        $pdf = new Html2Pdf('P', 'A5', 'fr', true, 'UTF-8', 0);
+        if ($route==="depot") {
+            $html = $this->twig->render('admin/depot/report.html.twig', [
+                'depot' => $depot,
+            ]);
+            $pdf->writeHTML($html);
+        } else {
+            
+            $html = $this->twig->render('admin/retrait/report.html.twig', [
+                'depot' => $depot,
+            ]);
+            $pdf->writeHTML($html);
+    
+        }
+       
         return  $pdf->output();
     }
 }

@@ -6,13 +6,14 @@ use App\Entity\Depot;
 use App\Entity\Compte;
 use App\Form\DepotType;
 use App\Repository\UserRepository;
+use App\Services\ReportingService;
 use App\Repository\DepotRepository;
 use App\Repository\CompteRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\Repository\RepositoryFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Repository\RepositoryFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -100,7 +101,7 @@ class DepotController extends AbstractController
                 $accountUser[0]->setSolde($newUserSold);
                 //dd($accountUser[0]->getSolde());
                 // 5. On met ajour le montant reel  du depot et sa commissions
-                $depot->setMontant($montantReel > 100 ? round($montantReel) : $montantReel);
+                $depot->setMontant($montantReel);
                 $depot->setMontantCommission($montantCommission);
 
                 //6. On genere le code
@@ -110,6 +111,7 @@ class DepotController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $depot->setCodeDepot($codeSecret);
                 $depot->setUser_depot($user);
+                $depot->setStatus(false);
                 // recherche role user
                 // if ($user->getRoles()[0] == 'ROLE_WRITER') {
                 //     $salaireSurCommission = round($montantCommission - 0.5, 3);
@@ -134,7 +136,7 @@ class DepotController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash('success', 'Le Dépot a été effectué avce succès');
 
-                return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+                return $this->redirectToRoute('depot_report', ['id' => $depot->getId()]);
             }
         }
 
@@ -220,5 +222,14 @@ class DepotController extends AbstractController
     {
         $user = $this->userRepo->findOneByUsernameOrEmail($user_email);
         return $user;
+    }
+
+     /**
+     * @Route("/depot/imprimer/{id}", methods={"GET","POST"},name="depot_report", requirements={"id":"[a-z0-9\-]*"})
+     */
+
+    public function report(Depot $depot, ReportingService $reportingService)
+    {
+        $reportingService->render($depot,"depot");
     }
 }

@@ -105,86 +105,24 @@
 <page backtop="0mm" backleft="10mm" backright="5mm" backbottom="1mm">
     {# page 1 #}
     <page_footer>
-    <p style="text-align:center;color:blue;"><a href="{{path('app_admin_index')}}">https://transacmoney.com/</a></p>
-    </page_footer>
-    <div>
-    
-        <h1 class="title"><span>TRANSAC-MONEY</span>
-        </h1>
-        <h2><span>Agence: </span> <span style="color:#3d3e3f">{{app.user.agence.name|upper}}</span> <br>
-            <span>Adresse:</span><span style="color:#303131">{{app.user.agence.description}}</span> <br>
-        </h2>
-    
-    </div>
-
-    <table>
-        <thead>
-            <tr>
-                <th colspan="3">code #{{depot.codeDepot}}</th>
-                <th>Réçu le,{{depot.retrait.dateRetrait|date("d/m/Y,h:i")}}</th>
-            </tr>
-            <tr>
-                <td colspan="2"> <strong>Expediteur:</strong><br> {{depot.expediteur.prenom}}
-                    {{depot.expediteur.nom}}.<br> Tél:{{depot.expediteur.telephone}}.<br>Ville
-                    :{{depot.user_depot.agence.city.name}}
-                </td>
-                <td colspan="2"> <strong>Bénéficiaire:</strong><br>
-                    {{depot.beneficiaire.prenom}}-{{depot.beneficiaire.nom}}<br>
-                    Tél:{{depot.beneficiaire.telephone}}.<br>
-                    Ville:{{depot.ville.name}} </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr rowspan="2">
-                <th colspan="3">Nom/ Description</th>
-                <th>Montant.</th>
-            </tr>
-            <tr>
-                <td colspan="3">Dépot </td>
-                <td>{{depot.montant + depot.montantCommission}} USD</td>
-            </tr>
-            <tr>
-                <td colspan="3">Commission </td>
-                <td>{{depot.montantCommission}} USD</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan="3">Montant Rétiré</th>
-                <td> {{depot.montant}} USD</td>
-            </tr>
-
-        </tfoot>
-        </table>
-        <p style="text-align:right;">Fait à {{app.user.agence.city.name}}, le
-            {{ "now"|date("d/m/Y") }}
-        </p>
-        <h2><span>Nom et Signature de l'Expediteur</span> <span class="signClient">Nom et Signature de l'Agent</span>
-            <br>
-            <span class="signeAgent"> {{depot.expediteur.prenom}}- {{depot.expediteur.nom}}</span> <span
-                class="signeClient">{{app.user.nomComplet}}</span> <br>
-            </h2>
-    <hr class="hr" />
-    {# page 2 #}
-    <page_footer>
-    
         <p style="text-align:center;color:blue;"><a href="{{path('app_admin_index')}}">https://transacmoney.com/</a></p>
     </page_footer>
     <div>
-    
+
         <h1 class="title"><span>TRANSAC-MONEY</span>
         </h1>
-        <h2><span>Agence: </span> <span style="color:#3d3e3f">{{app.user.agence.name|upper}}</span> <br>
-            <span>Adresse:</span><span style="color:#303131">{{app.user.agence.description}}</span> <br>
+        <h2><span>Agence: </span> <span style="color:#3d3e3f">{{depot.user_depot.agence.name|upper}}</span> <br>
+            <span>Adresse:</span><span style="color:#303131">{{depot.user_depot.agence.description}}</span> <br>
         </h2>
-    
+
+
     </div>
-    
+
     <table>
         <thead>
             <tr>
                 <th colspan="3">code #{{depot.codeDepot}}</th>
-                <th>Réçu le,{{depot.retrait.dateRetrait|date("d/m/Y,h:i")}}</th>
+                <th>Transferé le,{{depot.dateDepot|date("d/m/Y,h:i")}}</th>
             </tr>
             <tr>
                 <td colspan="2"> <strong>Expediteur:</strong><br> {{depot.expediteur.prenom}}
@@ -213,13 +151,77 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="3">Montant Rétiré</th>
+                <th colspan="3">Montant à Rétirer</th>
                 <td> {{depot.montant}} USD</td>
             </tr>
-    
+
         </tfoot>
     </table>
-    <p style="text-align:right;">Fait à {{app.user.agence.city.name}}, le
+    <p style="text-align:right;">Fait a {{depot.user_depot.agence.city.name}}, le
+        {{ "now"|date("d/m/Y") }}
+    </p>
+    <h2><span>Nom et Signature de l'Expediteur</span> <span class="signClient">Nom et Signature de l'Agent</span>
+        <br>
+        <span class="signeAgent"> {{depot.expediteur.prenom}}- {{depot.expediteur.nom}}</span> <span
+            class="signeClient">{{app.user.nomComplet}}</span> <br>
+    </h2>
+    <hr class="hr" />
+    {# page 2 #}
+    <page_footer>
+
+        <p style="text-align:center;color:blue;"><a href="{{path('app_admin_index')}}">https://transacmoney.com/</a></p>
+    </page_footer>
+    <div>
+
+        <h1 class="title"><span>TRANSAC-MONEY</span>
+        </h1>
+        <h2><span>Agence: </span> <span style="color:#3d3e3f">{{depot.user_depot.agence.name|upper}}</span> <br>
+            <span>Adresse:</span><span style="color:#303131">{{depot.user_depot.agence.description}}</span> <br>
+        </h2>
+
+
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th colspan="3">code #{{depot.codeDepot}}</th>
+                <th>Transferé le,{{depot.dateDepot|date("d/m/Y,h:i")}}</th>
+            </tr>
+            <tr>
+                <td colspan="2"> <strong>Expediteur:</strong><br> {{depot.expediteur.prenom}}
+                    {{depot.expediteur.nom}}.<br> Tél:{{depot.expediteur.telephone}}.<br>Ville
+                    :{{depot.user_depot.agence.city.name}}
+                </td>
+                <td colspan="2"> <strong>Bénéficiaire:</strong><br>
+                    {{depot.beneficiaire.prenom}}-{{depot.beneficiaire.nom}}<br>
+                    Tél:{{depot.beneficiaire.telephone}}.<br>
+                    Ville:{{depot.ville.name}} </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr rowspan="2">
+                <th colspan="3">Nom/ Description</th>
+                <th>Montant.</th>
+            </tr>
+            <tr>
+                <td colspan="3">Dépot </td>
+                <td>{{depot.montant + depot.montantCommission}} USD</td>
+            </tr>
+            <tr>
+                <td colspan="3">Commission </td>
+                <td>{{depot.montantCommission}} USD</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">Montant à Rétirer</th>
+                <td> {{depot.montant}} USD</td>
+            </tr>
+
+        </tfoot>
+    </table>
+    <p style="text-align:right;">Fait a {{depot.user_depot.agence.city.name}}, le
         {{ "now"|date("d/m/Y") }}
     </p>
     <h2><span>Nom et Signature de l'Expediteur</span> <span class="signClient">Nom et Signature de l'Agent</span>

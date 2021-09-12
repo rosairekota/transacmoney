@@ -141,7 +141,11 @@ class RetraitController extends AbstractController
             if (!empty($insertRetrait)) {
                 $newRetrait = $retraitRepository->findOneBy(['code_retrait' => $retrait->getCodeRetrait()]);
                 if (!empty($newRetrait)) {
-                    $depoUpdate = $depoRepo->updateAmountBySql(['retrait' => $newRetrait->getId(), 'code_depot' => $retrait->getCodeRetrait()]);
+                    $depoUpdate = $depoRepo->updateAmountBySql(
+                        ['retrait' => $newRetrait->getId(),
+                         'code_depot' => $retrait->getCodeRetrait(),
+                         'status'=>true
+                    ]);
                     //     // on verifie si le depot a ete mise a jour
                     if (!empty($depoUpdate)) {
                     }
@@ -177,7 +181,7 @@ class RetraitController extends AbstractController
 
     public function report(Depot $depot, ReportingService $reportingService)
     {
-        $reportingService->reportView($depot);
+        $reportingService->render($depot,"retrait");
     }
     /**
      * @Route("/new/{user_email}", name="retrait_new_old", methods={"GET","POST"})
