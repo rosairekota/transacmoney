@@ -107,12 +107,13 @@ class RetraitController extends AbstractController
         ]);
     }
     /**
-     * @Route("/new/@j9a8j7k94.@{user_email}-j7k", name="retrait_new", methods={"GET","POST"})
+     * @Route("/nouveau-retrait", name="retrait_new", methods={"GET","POST"})
      *  @IsGranted("ROLE_WRITER")
      */
-    public function new($user_email, Request $request, RetraitRepository $retraitRepository, UserRepository $userRepo, DepotRepository $depoRepo, CompteRepository $accountRepot): Response
-    {
-        $entityManager = $this->getDoctrine()->getManager();
+    public function new(Request $request, RetraitRepository $retraitRepository, UserRepository $userRepo, DepotRepository $depoRepo, CompteRepository $accountRepot): Response
+    {   
+        
+
 
         $depoUpdate = null;
         // on recupere le depot courant dans la session;
@@ -121,15 +122,18 @@ class RetraitController extends AbstractController
         $retrait = new Retrait();
         $form = $this->createForm(RetraitType::class, $retrait);
         $form->handleRequest($request);
-        $user = $userRepo->findOneByUsernameOrEmail($user_email);
-        $account = $accountRepot->findByUser($user);
 
-
+       // fetching  compte admin et user courant
+        $currentUser = unserialize($_SESSION['_sf2_attributes']['_security_main'])->getUser();
+        $adminUser = $userRepo->findOneByUsernameOrEmail("admin@transacmoney.com");
+        $accountCurrentUser = $accountRepot->findOneByUser($currentUser);
+        $adminAccount=$accountRepot->findOneBy(['id'=>$adminUser->getAccount()->getId()]);
+        
         if ($form->isSubmitted() && $form->isValid()) {
             // $retrait->setDepot($depotSession['depot'][0]);
             $datas = [
                 "depot_id" => $depotSession['depot'][0]->getId(),
-                "user_retrait" => $user->getId(),
+                "user_retrait" => $currentUser->getId(),
                 "montant_retire" => $retrait->getMontantRetire(),
                 "beneficiaire_piece_type" => $retrait->getBeneficiairePieceType(),
                 "beneficiaire_piece_numero" => $retrait->getBeneficiairePieceNumero(),
@@ -137,6 +141,15 @@ class RetraitController extends AbstractController
                 "code_retrait" => $retrait->getCodeRetrait()
             ];
 
+            // traitement des comptes: 
+            $entityManager=$this->getDoctrine()->getManager();
+
+            $adminAccount->setSolde($adminAccount->getSolde() - $retrait->getMontantRetire());
+            $accountCurrentUser->setSolde($accountCurrentUser->getSolde() + $retrait->getMontantRetire());
+            $entityManager->persist($adminAccount);
+            $entityManager->persist($accountCurrentUser);
+            $entityManager->flush();
+        
             $insertRetrait = $retraitRepository->insertBySql($datas);
             if (!empty($insertRetrait)) {
                 $newRetrait = $retraitRepository->findOneBy(['code_retrait' => $retrait->getCodeRetrait()]);
@@ -148,6 +161,7 @@ class RetraitController extends AbstractController
                     ]);
                     //     // on verifie si le depot a ete mise a jour
                     if (!empty($depoUpdate)) {
+                        $this->addFlash('success','votre Compte vient dêtre credité de'.$retrait->getMontantRetire().'$');
                     }
                 }
             } else {

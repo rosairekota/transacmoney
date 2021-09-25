@@ -48,10 +48,10 @@
                                 }}
                             </div>
                             <div class="col-sm-4">
-                                {{ form_row(form.beneficiaire_piece_numero) }}
+                                {{ form_row(form.beneficiaire_piece_numero,{'required':false}) }}
                             </div>
                             <div class="col-sm-4">
-                                {{ form_row(form.beneficiaire_piece_type) }}
+                                {{ form_row(form.beneficiaire_piece_type,{'required':false}) }}
                             </div>
                             <div class="col-sm-8">
                                 {{ form_row(form.libelle,{'label':'Description ou Commentaire'}) }}

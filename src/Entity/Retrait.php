@@ -7,7 +7,7 @@ use App\Entity\User;
 use App\Entity\Depot;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RetraitRepository;
-
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=RetraitRepository::class)
  */
@@ -38,16 +38,18 @@ class Retrait
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank( message="Veuillez preciser la piece d'identité SVP!")
      */
     private $beneficiaire_piece_type;
 
     /**
-     * @ORM\Column(type="string", length=255,nullable=true)
+     * @ORM\Column(type="string", length=255,nullable=true) 
      */
     private $beneficiaire_piece_image;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank( message="Veuillez preciser le numéro de la piece d'identité SVP!")
      */
     private $beneficiaire_piece_numero;
 
