@@ -25,7 +25,7 @@
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="x_panel">
                 <div class="x_title">
-                    <h2>Formulaire</h2>
+                    <h2>{{title}}</h2>
                     <ul class="nav navbar-right panel_toolbox">
                         <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                         </li>
@@ -39,13 +39,49 @@
                     {{ form_row(form.montant) }}
                     <div class="row">
                         <div class="col-sm-6 border border-rondered"
-                            style="background-color:rgba(228, 232, 235, 0.856)">
-                            {{ form_row(form.expediteur) }}
+                            style="background-color:rgba(214, 217, 219, 0.514)">
+                            <h5>Expediteur&nbsp;:</h5>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ form_row(form.expediteur.nom) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.expediteur.postnom) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.expediteur.prenom) }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ form_row(form.expediteur.telephone) }}
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="row border border-rondered" style="background-color:rgba(250, 251, 252, 0.795)">
-                                <div class="col-sm-12"> {{ form_row(form.beneficiaire) }}</div>
-                                <div class="col-sm-12"> {{ form_row(form.ville) }}</div>
+                                <div class="col-sm-12">
+                                    <h5>Bénéficiaire&nbsp;:</h5>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            {{ form_row(form.beneficiaire.nom) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{ form_row(form.beneficiaire.postnom) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{ form_row(form.beneficiaire.prenom) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{ form_row(form.beneficiaire.sexe) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{ form_row(form.beneficiaire.telephone) }}
+                                        </div>
+                                        <div class="col-sm-6">
+                                            {{ form_row(form.ville.name) }}
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
