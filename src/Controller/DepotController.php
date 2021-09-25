@@ -85,7 +85,7 @@ class DepotController extends AbstractController
                 $this->addFlash("danger", "Dépot non autorisé. Votre solde est inferieur au montant du dépot. Veuillez contacter l'administrateur.");
             } else {
 
-                // 1. On soustrait le montant du depo au solde du user-Agence
+                // 1. On soustrait le montant du dépot au solde du user-Agence
 
                 $newUserSold = floatVal($accountUser[0]->getSolde() - $depot->getMontant());
 
@@ -112,21 +112,7 @@ class DepotController extends AbstractController
                 $depot->setCodeDepot($codeSecret);
                 $depot->setUser_depot($user);
                 $depot->setStatus(false);
-                // recherche role user
-                // if ($user->getRoles()[0] == 'ROLE_WRITER') {
-                //     $salaireSurCommission = round($montantCommission - 0.5, 3);
-
-                //     $montantFinalCommission = $montantCommission - floor($salaireSurCommission);
-                //     $depot->setMontantCommission($montantFinalCommission);
-
-                //     $accountUser[0]->setCommissionSousAgent($salaireSurCommission + $accountUser[0]->getCommissionSousAgent());
-
-
-                //     //$entityManager->persist($depot);
-                // }
-                // if ($userAdmin->getRoles()[0] == 'ROLE_SUPERUSER') {
-                //     $accountAdmin[0]->setCommissionSousAgent($montantFinalCommission + $accountAdmin[0]->getCommissionSousAgent());
-                // }
+               
 
                 $depot->setMontantCommission($montantCommission);
                 $entityManager->persist($depot);
