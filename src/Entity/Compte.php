@@ -59,7 +59,7 @@ class Compte
     public function __construct()
     {
         $this->date_ouverture = new \DateTime();
-        $this->numero_compte = str_shuffle("1234");
+        $this->numero_compte = "9097-".str_shuffle(random_int(10,50)."".random_int(100,1000));
         $this->credits = new ArrayCollection();
         $this->debits = new ArrayCollection();
     }

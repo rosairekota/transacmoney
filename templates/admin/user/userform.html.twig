@@ -48,7 +48,7 @@
                                 {{ form_row(userForm.role) }}
                             </div>
                             <div class="col-sm-4">
-                                {{ form_row(userForm.agence.name) }}
+                                {{ form_row(userForm.agence.name,{'label':"Nom de l'Agence"}) }}
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                                 {{ form_row(userForm.agence.description) }}
                             </div>
                             <div class="col-sm-4">
-                                {{ form_row(userForm.agence.city) }}
+                                {{ form_row(userForm.agence.city,{'label':"Ville"}) }}
                             </div>
                             <div class="col-sm-4">
                                 {{ form_row(userForm.account) }}

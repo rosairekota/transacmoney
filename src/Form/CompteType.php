@@ -19,7 +19,7 @@ class CompteType extends AbstractType
     {
         $builder
 
-            ->add('solde', IntegerType::class, ['label' => 'Solde initial']);
+            ->add('solde', IntegerType::class, ['label' => false]);
         // ->add('user', UserType::class, ['label' => 'Respnsable ']);
     }
 
