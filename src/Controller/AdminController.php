@@ -29,7 +29,7 @@ class AdminController extends AbstractController
         return $this->render("admin/main.html.twig", [
             'depots' => $depotRepository->findSumDepotsBySql('depot', 'montant'),
             'retraits' => $depotRepository->findSumDepotsBySql('retrait', 'montant_retire'),
-            'agences' => $agenceRepository->findAll(),
+            'agences' => $userRepo->findBy(['valid'=>true,'deleted'=>false]),
             'commussions' => $depotRepository->findSumDepotsBySql('depot', 'montant_commission'),
             'pending_retraits'=>$depotRepository->selectPendingRetrait(),
             'usersDisabled'=>$userRepo->findBy(['valid'=>false]),
