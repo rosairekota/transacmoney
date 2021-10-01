@@ -18,19 +18,32 @@
 				<div class="x_title">
 					<h2>
 						{{ "backend.retrait.retrait_listing"|trans }}</h2>
-
-					<ul class="nav navbar-right panel_toolbox">
-						<li>
-							<a href="{{ path('retrait_search') }}" class="btn btn-success text-white">Effectuer un
-								Retrait</a>
-						</li>
-					</ul>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
 					<div class="row">
-
-						<table id="example" class="display table table-striped table-bordered dataminetables">
+						<div class="col-sm-12 mb-5">
+							<div class="row">
+								<div class="col-sm-4">
+									<a href="{{ path('retrait_search') }}" class="btn btn-primary text-white">Nouveau un
+										Retrait</a>
+								</div>
+								<div class="col-sm-8">
+									<form action="" method="POST" class="row">
+										<div class="col-sm-6 offset-sm-2">
+											<input type="text" name="" id="" class="form-control"
+												placeholder="Saisissez le code du retrait pour imprimer">
+										</div>
+										<div class="col-sm-2">
+											<button type="submit" class="btn btn-dark">Imprimer</button>
+										</div>
+									</form>
+										
+										</div>
+										</div>
+										</div>
+										<hr />
+								<table id="example" class="display table table-striped table-bordered dataminetables">
 							<thead>
 								<th>Montant</th>
 								<th>Code Dépot</th>

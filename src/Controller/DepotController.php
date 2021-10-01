@@ -38,17 +38,18 @@ class DepotController extends AbstractController
     }
 
     /**
-     * @Route("/{user_email}-@j9a8j7k94", name="depot_index", methods={"GET"})
+     * @Route("/les-depots", name="depot_index", methods={"GET"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function index($user_email): Response
+    public function index(?string $user_email): Response
     {
-        $this->user_email = $user_email;
-        if ($user_email == 'admin@transacmoney.com') {
+        $currentUser = unserialize($_SESSION['_sf2_attributes']['_security_main'])->getUser();
+        $this->user_email = $currentUser->getEmail();
+        if ($user_email === 'admin@transacmoney.com') {
             $depots = $this->depotRepo->findAll();
         } else {
-            $user = $this->getUserByEmail($user_email);
-            $depots = $this->depotRepo->findByEmail($user->getId());
+           
+            $depots = $this->depotRepo->findByEmail($currentUser->getId());
             //$depots=$depotRepository->selectByIdSql(['id'=>$user->getId()]);
 
 
@@ -120,9 +121,9 @@ class DepotController extends AbstractController
 
 
                 $entityManager->flush();
-                $this->addFlash('success', 'Le Dépot a été effectué avce succès');
+                $this->addFlash('success', 'Le Dépot a été effectué avec succès!');
 
-                return $this->redirectToRoute('depot_report', ['id' => $depot->getId()]);
+                return $this->redirectToRoute('depot_index');
             }
         }
 
@@ -211,11 +212,21 @@ class DepotController extends AbstractController
     }
 
      /**
-     * @Route("/depot/imprimer/{id}", methods={"GET","POST"},name="depot_report", requirements={"id":"[a-z0-9\-]*"})
+     * @Route("/depot/imprimer", methods={"GET","POST"},name="depot_report", requirements={"id":"[a-z0-9\-]*"})
      */
 
-    public function report(Depot $depot, ReportingService $reportingService)
+    public function report(Request $request, ReportingService $reportingService)
     {
-        $reportingService->render($depot,"depot");
+        $code=$request->request->get('code');
+        $depot=$this->depotRepo->findOneBy(['codeDepot' => $code]);
+        if (!empty($depot)) {
+            $reportingService->render($depot,"depot");
+        } else {
+             $this->addFlash('success', 'Le code est invalide!');
+              return $this->redirectToRoute('depot_index');
+        }
+        
+
+       
     }
 }
