@@ -3875,7 +3875,7 @@ a.btn-danger {
   color: #ffffff;
 }
 .btn-danger:hover {
-  background-color: #f7f7f7 !important;
+  background-color:  #fff !important;
   border: 1px sloid#FF3636 !important;
   color: #ff3636 !important;
 }
