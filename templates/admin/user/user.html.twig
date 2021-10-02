@@ -2,14 +2,6 @@
 
 {% block contenpage %}
 <div class="">
-	<div class="page-title">
-		<div class="title_left">
-			<h5>
-				{{ "backend.user.listing"|trans }}
-			</h5>
-		</div>
-	</div>
-
 	<div class="clearfix"></div>
 
 	<div class="row">
@@ -17,10 +9,11 @@
 			<div class="x_panel">
 				<div class="x_title">
 					<h2>
-						{{ "backend.user.user_listing"|trans }}</h2>
+						Liste des Agences
+						</h2>
 					<ul class="nav navbar-right panel_toolbox">
 						<li>
-							<a href="{{ path('app_admin_new_user') }}" class="btn btn-success">NEW</a>
+							<a href="{{ path('app_admin_new_user') }}" class="btn btn-success">Créer une nouvelle Agence</a>
 						</li>
 					</ul>
 					<div class="clearfix"></div>
@@ -72,7 +65,7 @@
 									<td>
 										<a class="btn btn-primary" href="{{ path('app_admin_user_agency',{'id':user.id})
 											}}">
-											<i class="fa fa-edit"></i>
+											<i class="fa fa-info-circle"></i>
 										</a>
 									</td>
 									<td>
