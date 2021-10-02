@@ -907,8 +907,8 @@ a .material-icons {
 }
 
 .card .card-header-primary{
-      background: linear-gradient(60deg,#2a3f54,#1d6db8af);
-      background-color: #2a3f54a1;
+      background: linear-gradient(60deg,#124e8a,#1d6db8af);
+      background-color: #124e8a;
       /* background: linear-gradient(to right,#2a5572 ,#91A5e4); */
       box-shadow: 0 5px 20px 0 rgba(0,0,0,.2), 0 13px 24px -11px#2a5572;
       z-index: 9;
@@ -960,9 +960,9 @@ p {
   
 }
 .btn-login:hover{
-  color:#2a3f54!important;
+  color:#124e8a!important;
   background-color:#ffffff;
-  border:0.5px solid#2a3f54;
+  border:2px solid#1762ad;
 }
 
 .form-control:focus{
