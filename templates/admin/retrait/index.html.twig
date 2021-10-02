@@ -13,6 +13,18 @@
 	<div class="clearfix"></div>
 
 	<div class="row">
+		<div class="col-sm-8 offset-sm-4">
+			<div class=" row">
+				{% for label, messages in app.flashes(['danger', 'warning','success']) %}
+				{% for message in messages %}
+		
+				<div class="col-sm-6 alert alert-{{ label }}"> {{ message }} </div>
+		
+				{% endfor %}
+		
+				{% endfor %}
+			</div>
+		</div>
 		<div class="col-md-12">
 			<div class="x_panel">
 				<div class="x_title">
@@ -25,13 +37,13 @@
 						<div class="col-sm-12 mb-5">
 							<div class="row">
 								<div class="col-sm-4">
-									<a href="{{ path('retrait_search') }}" class="btn btn-primary text-white">Nouveau un
+									<a href="{{ path('retrait_search') }}" class="btn btn-primary text-white">Nouveau
 										Retrait</a>
 								</div>
 								<div class="col-sm-8">
-									<form action="" method="POST" class="row">
+									<form action="{{ path('retrait_report') }}" method="POST" class="row">
 										<div class="col-sm-6 offset-sm-2">
-											<input type="text" name="" id="" class="form-control"
+											<input type="text" name="code" id="code" class="form-control"
 												placeholder="Saisissez le code du retrait pour imprimer">
 										</div>
 										<div class="col-sm-2">

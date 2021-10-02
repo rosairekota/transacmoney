@@ -41,11 +41,11 @@ class DepotController extends AbstractController
      * @Route("/les-depots", name="depot_index", methods={"GET"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function index(?string $user_email): Response
+    public function index(): Response
     {
         $currentUser = unserialize($_SESSION['_sf2_attributes']['_security_main'])->getUser();
-        $this->user_email = $currentUser->getEmail();
-        if ($user_email === 'admin@transacmoney.com') {
+       
+        if ($currentUser->getEmail() === 'admin@transacmoney.com') {
             $depots = $this->depotRepo->findAll();
         } else {
            
@@ -156,7 +156,7 @@ class DepotController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+            return $this->redirectToRoute('depot_index');
         }
 
         return $this->render('admin/depot/edit.html.twig', [
@@ -187,7 +187,7 @@ class DepotController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+        return $this->redirectToRoute('depot_index');
     }
 
     /**
@@ -222,7 +222,7 @@ class DepotController extends AbstractController
         if (!empty($depot)) {
             $reportingService->render($depot,"depot");
         } else {
-             $this->addFlash('success', 'Le code est invalide!');
+              $this->addFlash('danger', 'Vous ne pouvez pas imprimer. Car, ce code est invalide!');
               return $this->redirectToRoute('depot_index');
         }
         

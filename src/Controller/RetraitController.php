@@ -29,29 +29,26 @@ class RetraitController extends AbstractController
 {
     private SessionInterface $session;
     private $depoRepo;
-    private $user_email;
-    private $twig;
+   
 
-    public function __construct(DepotRepository $depoRepo, SessionInterface $session, Environment $twig)
+    public function __construct(DepotRepository $depoRepo, SessionInterface $session)
     {
         $this->depoRepo = $depoRepo;
         $this->session = $session;
-        $this->twig = $twig;
+        
     }
     /**
-     * @Route("/@j9a8j7k94.@{user_email}-j7k", name="retrait_index", methods={"GET|POST"})
+     * @Route("/mes-retraits", name="retrait_index", methods={"GET|POST"})
      *  @IsGranted("ROLE_WRITER")
      */
-    public function index($user_email, RetraitRepository $retraitRepository, UserRepository $userRepo, Request $request): Response
+    public function index(RetraitRepository $retraitRepository, UserRepository $userRepo, Request $request): Response
     {
-        $this->user_email = $user_email;
-        if ($user_email == 'admin@transacmoney.com') {
+         $currentUser = unserialize($_SESSION['_sf2_attributes']['_security_main'])->getUser();
+        
+        if ($currentUser->getEmail() === 'admin@transacmoney.com') {
             $retraits = $retraitRepository->findAll();
         } else {
-            $user = $userRepo->findOneByUsernameOrEmail($user_email);
-            $retraits = $retraitRepository->findByEmail($user->getId());
-            //$depots=$depotRepository->selectByIdSql(['id'=>$user->getId()]);
-
+            $retraits = $retraitRepository->findByEmail($currentUser->getId());
 
         }
         return $this->render('admin/retrait/index.html.twig', [
@@ -167,20 +164,8 @@ class RetraitController extends AbstractController
             } else {
                 $this->addFlash('warning', "Echec d'insertion");
             }
-
-            // $retrait = $depotSession['depot'][0]->getRetrait()->setUserRetrait($user);
-            // //dd($retrait);
-            // // $entityManager->persist($depotSession['depot'][0]);
-            // $entityManager->persist($retrait);
-            // $entityManager->flush();
-            //     }
-            // }
-            // $retraitRepository->insertBySql($datas);
-            $idDepot = $depotSession['depot'][0]->getId();
             unset($depotSession);
-
-            // return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
-            return $this->redirectToRoute('retrait_report', ['id' => $idDepot]);
+            return $this->redirectToRoute('retrait_index');
         }
 
         return $this->render('admin/retrait/new.html.twig', [
@@ -190,12 +175,20 @@ class RetraitController extends AbstractController
     }
 
     /**
-     * @Route("/retrait/report/{id}", methods={"GET","POST"},name="retrait_report", requirements={"id":"[a-z0-9\-]*"})
+     * @Route("/retrait/report/", methods={"GET","POST"},name="retrait_report", requirements={"id":"[a-z0-9\-]*"})
      */
 
-    public function report(Depot $depot, ReportingService $reportingService)
+    public function report(Request $request, DepotRepository $depotRepo,ReportingService $reportingService)
     {
-        $reportingService->render($depot,"retrait");
+       
+        $code=$request->request->get('code');
+        $depot=$depotRepo->findOneBy(['codeDepot' => $code]);
+        if (!empty($depot)) {
+            $reportingService->render($depot,"retrait");
+        } else {
+             $this->addFlash('danger', 'Vous ne pouvez pas imprimer. Car, ce code est invalide!');
+              return $this->redirectToRoute('retrait_index');
+        }
     }
     /**
      * @Route("/new/{user_email}", name="retrait_new_old", methods={"GET","POST"})
@@ -221,7 +214,7 @@ class RetraitController extends AbstractController
             unset($depotSession);
             session_destroy();
 
-            return $this->redirectToRoute('retrait_index', ['user_email' => $user_email]);
+            return $this->redirectToRoute('retrait_index');
         }
 
         return $this->render('admin/retrait/new.html.twig', [
@@ -273,6 +266,6 @@ class RetraitController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+        return $this->redirectToRoute('retrait_index');
     }
 }

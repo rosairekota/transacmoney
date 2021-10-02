@@ -13,6 +13,18 @@
 	<div class="clearfix"></div>
 
 	<div class="row">
+		<div class="col-sm-8 offset-sm-4">
+			<div class=" row">
+				{% for label, messages in app.flashes(['danger', 'warning','success']) %}
+				{% for message in messages %}
+		
+				<div class="col-sm-6 alert alert-{{ label }}"> {{ message }} </div>
+		
+				{% endfor %}
+		
+				{% endfor %}
+			</div>
+		</div>
 		<div class="col-md-12">
 			<div class="x_panel">
 				<div class="x_title">
@@ -22,6 +34,7 @@
 				</div>
 				<div class="x_content">
 					<div class="row">
+						{% if not is_granted("ROLE_SUPERUSER") %}
 						<div class="col-sm-12 mb-5">
 							<div class="row">
 								<div class="col-sm-4">
@@ -42,14 +55,14 @@
 							</div>
 						</div>
 						<hr />
-				
+				{% endif %}
 					<table id="example" class="display table table-striped table-bordered dataminetables">
 							<thead>
 								<th>Agence Env.</th>
-								<th>Expediteur</th>
+								<th>Exp.</th>
 								<th>Beneficiaire</th>
 								<th>Montant</th>
-								<th>Commission</th>
+								<th>Comm</th>
 								<th>Code Dépot</th>
 								<th>Date Dépot</th>
 								{% if is_granted("ROLE_SUPERUSER") %}
