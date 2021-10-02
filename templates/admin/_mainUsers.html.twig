@@ -1,14 +1,15 @@
 
-<div class="x_panel">
-    <div class="card card-stats mb-4 mb-xl-0">
-        <div class="card-body">
-          <div class="row">
+<div class="x_panel p-5">
+  <div class="row">
             <div class="col">
-              <h5 class="card-title text-uppercase text-muted mb-0 h2 font-weight-bold text-center">Effectuer une transaction</h5>
+              <h4 class="card-title text-uppercase mb-0 font-weight-bold text-center">Effectuer une transaction</h4>
             </div>
           </div>
+    <div class="card card-stats mb-4 mb-xl-0">
+      <div class="card-body">
           <div class="mt-3 mb-0 text-muted text-sm text-center text-white">
-            <a class="btn btn-primary btn-lg btn-sucess" href="{{ path('depot_new',{'user_email':app.user.email}) }}">Depot</a>
+            <a class="btn btn-primary btn-lg btn-success mr-5"
+              href="{{ path('depot_new',{'user_email':app.user.email}) }}">Depot</a>
             <a class="btn btn-primary btn-danger btn-lg text-white" href="{{ path('retrait_search') }}">Retrait</a>
           </div>
         </div>

@@ -41,12 +41,12 @@
             <a id="menu_toggle"><i class="fa fa-bars"></i></a>
         </div>
         <nav class="nav navbar-nav">
-            <ul class=" navbar-right">
-                <li class="nav-item dropdown open" style="padding-left: 15px;">
+            <ul class="navbar-right">
+                <li class="nav-item dropdown open" style="padding-left: 15px; ">
                     <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown"
                         data-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ asset('build/images/profile2.png') }}" alt=""><span class="text-white">{{
-                            app.user.username }}</span>
+                        <img src="{{ asset('build/images/profile2.png') }}" alt="profile_img"><span
+                            style="color:#124e8a;font-weight:bold;">Paramètres</span>
                     </a>
                     <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{{ path('app_admin_changepswd') }}"><i
