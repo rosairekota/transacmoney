@@ -43,7 +43,7 @@
                                     <td>{{ debit.requestDate ? debit.requestDate|date('d/m/Y à H:i:s') : '' }}</td>
                                     {% if is_granted('ROLE_SUPERUSER') %}
                                     {% if debit.status %}
-                                    <td style="color: red;">Traitée</td>
+                                    <td style="color: yellow;">Traitée</td>
                                     {% else %}
                                     <td style="color: seagreen;">En attente</td>
                                     {% endif %}
