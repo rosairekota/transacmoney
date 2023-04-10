@@ -35,18 +35,29 @@ class Agence
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence",cascade={"persist"})
      */
     private $users;
 
     /**
-     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="agences")
+     * @ORM\ManyToOne(targetEntity=City::class, inversedBy="agences",cascade={"persist"})
      */
     private $city;
+
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contact;
+
+
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        /**
+         * @ORM\Column(type="string", length=255)
+         */
     }
 
     public function getId(): ?int
@@ -128,6 +139,20 @@ class Agence
     public function setCity(?City $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+
+
+    public function getContact(): ?string
+    {
+        return $this->contact;
+    }
+
+    public function setContact(?string $contact): self
+    {
+        $this->contact = $contact;
 
         return $this;
     }

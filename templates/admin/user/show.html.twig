@@ -1,0 +1,11 @@
+{% extends 'admin/bars.html.twig' %}
+
+{% block contenpage %}
+<div class="">
+    <div class="clearfix"></div>
+
+    {% include "admin/user/show_partials/_detail.html.twig" %}
+    {% include "admin/user/show_partials/_rechargement.html.twig" %}
+    {% include "admin/user/show_partials/_paiement.html.twig" %}
+</div>
+{% endblock %}

@@ -6,11 +6,14 @@ use App\Entity\Depot;
 use App\Entity\Compte;
 use App\Form\DepotType;
 use App\Repository\UserRepository;
+use App\Services\ReportingService;
 use App\Repository\DepotRepository;
 use App\Repository\CompteRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\Repository\RepositoryFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -22,17 +25,31 @@ class DepotController extends AbstractController
     private $user_email;
 
     /**
-     * @Route("/{user_email}-@j9a8j7k94", name="depot_index", methods={"GET"})
+     * @var UserRepository
+     */
+    private $userRepo;
+
+    private DepotRepository $depotRepo;
+
+    public function __construct(UserRepository $userRepo, DepotRepository $depotRepo)
+    {
+        $this->userRepo = $userRepo;
+        $this->depotRepo = $depotRepo;
+    }
+
+    /**
+     * @Route("/les-depots", name="depot_index", methods={"GET"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function index(DepotRepository $depotRepository, $user_email, UserRepository $userRepo): Response
+    public function index(): Response
     {
-        $this->user_email = $user_email;
-        if ($user_email == 'admin@transacmoney.com') {
-            $depots = $depotRepository->findAll();
+        $currentUser = unserialize($_SESSION['_sf2_attributes']['_security_main'])->getUser();
+       
+        if ($currentUser->getEmail() === 'admin@transacmoney.com') {
+            $depots = $this->depotRepo->findAll();
         } else {
-            $user = $userRepo->findOneByUsernameOrEmail($user_email);
-            $depots = $depotRepository->findByEmail($user->getId());
+           
+            $depots = $this->depotRepo->findByEmail($currentUser->getId());
             //$depots=$depotRepository->selectByIdSql(['id'=>$user->getId()]);
 
 
@@ -46,12 +63,12 @@ class DepotController extends AbstractController
      * @Route("/new/{user_email}-@j9a8j7k94", name="depot_new", methods={"GET","POST"})
      * @IsGranted("ROLE_WRITER")
      */
-    public function new($user_email, Request $request, UserRepository $userRepo, CompteRepository $accountUserRepot): Response
+    public function new($user_email, Request $request, CompteRepository $accountUserRepot): Response
     {
 
-        $user = $userRepo->findOneByUsernameOrEmail($user_email);
-        $userAdmin = $userRepo->findOneByUsernameOrEmail("admin@transacmoney.com");
-        $montantFinalCommission = 0;
+        $user = $this->getUserByEmail($user_email);
+        $userAdmin =  $this->getUserByEmail("admin@transacmoney.com");
+
 
         $depot = new Depot();
         $form = $this->createForm(DepotType::class, $depot);
@@ -59,60 +76,54 @@ class DepotController extends AbstractController
         $accountUser = $accountUserRepot->findByUser($user);
         $accountAdmin = $accountUserRepot->findByUser($userAdmin);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($accountUser[0]->getMontantDebit() < 0 || $accountUser[0]->getMontantDebit() < $depot->getMontant()) {
-                if ($accountUser[0]->getMontantDebit() < 0) {
-                    $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
-                } elseif ($accountUser[0]->getMontantDebit() < $depot->getMontant()) {
-                    $this->addFlash("danger", "Dépot non autorisé. Votre caise est inferieur du montant du dépot. Veuillez contacter l'administrateur.");
-                }
+            if ($accountUser[0]->getSolde() < 0) {
+                $this->addFlash("danger", "Dépot non autorisé. Votre caisse est epuisé. Veuillez contacter l'administrateur.");
+            }
+            if (intVal($depot->getMontant()) > ($accountUser[0]->getSolde())) {
+                $this->addFlash("danger", "Dépot non autorisé. Votre solde est inferieur au montant du dépot. Veuillez contacter l'administrateur.");
             } else {
 
-                //dd($accountUser);
-                $montantCommission = $depot->getMontant() * 0.025;
+                // 1. On soustrait le montant du dépot au solde du user-Agence
 
-                $montantReel = $depot->getMontant() - floatval($montantCommission);
+                $newUserSold = floatVal($accountUser[0]->getSolde() - $depot->getMontant());
 
-                $depot->setMontant($montantReel > 100 ? round($montantReel) : $montantReel);
-                $codeSecret = str_shuffle($depot->getExpediteur()->getTelephone());
+                // 2. On calcul la commission
+
+                $montantCommission = floatval($depot->getMontant()) * 0.005;
+
+                // 3. On Increment le compte de l'admin
+                $accountAdmin[0]->setSolde($accountAdmin[0]->getSolde() + $depot->getMontant());
+                $montantReel = $depot->getMontant() - $montantCommission;
+
+                // 4. On met a jour le compte de l'agent
+                $accountUser[0]->setSolde($newUserSold);
+                //dd($accountUser[0]->getSolde());
+                // 5. On met ajour le montant reel  du depot et sa commissions
+                $depot->setMontant($montantReel);
+                $depot->setMontantCommission($montantCommission);
+
+                //6. On genere le code
+                $codeSecret = str_shuffle(substr(str_shuffle(\md5(str_repeat($depot->getExpediteur()->getTelephone(), 5))), 1, 10));
+
+                //on persist les objets
                 $entityManager = $this->getDoctrine()->getManager();
                 $depot->setCodeDepot($codeSecret);
                 $depot->setUser_depot($user);
+                $depot->setStatus(false);
+               
 
-                $credit = $accountUser[0]->getMontantDebit() - $depot->getMontant();
-
-                $accountUser[0]->setMontantCredit($depot->getMontant() + $accountUser[0]->getMontantCredit());
-                $accountUser[0]->setMontantDebit(floor($credit));
-                $solde = (floatval($accountUser[0]->getMontantDebit() - $accountUser[0]->getMontantCredit()));
-                //dd($solde);
-                $accountUser[0]->setSolde($solde <= 0 ? 0 : $solde);
-
-                // recherche role user
-                if ($user->getRoles()[0] == 'ROLE_WRITER') {
-                    $salaireSurCommission = round($montantCommission * 0.05, 3);
-
-                    $montantFinalCommission = $montantCommission - floor($salaireSurCommission);
-                    $depot->setMontantCommission($montantFinalCommission);
-
-                    $accountUser[0]->setCommissionSousAgent($salaireSurCommission + $accountUser[0]->getCommissionSousAgent());
-
-
-                    $entityManager->persist($depot);
-                }
-                if ($userAdmin->getRoles()[0] == 'ROLE_SUPERUSER') {
-                    $accountAdmin[0]->setCommissionSousAgent($montantFinalCommission + $accountAdmin[0]->getCommissionSousAgent());
-                } else {
-
-                    $depot->setMontantCommission($montantCommission);
-                    $entityManager->persist($depot);
-                }
+                $depot->setMontantCommission($montantCommission);
+                $entityManager->persist($depot);
+                $entityManager->persist($accountUser[0]);
 
 
                 $entityManager->flush();
-                $this->addFlash('success', 'Le Dépot a été effectué avce succès');
+                $this->addFlash('success', 'Le Dépot a été effectué avec succès!');
 
-                return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+                return $this->redirectToRoute('depot_index');
             }
         }
 
@@ -145,7 +156,7 @@ class DepotController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+            return $this->redirectToRoute('depot_index');
         }
 
         return $this->render('admin/depot/edit.html.twig', [
@@ -153,6 +164,16 @@ class DepotController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    /**
+     * @Route("depot_verification/", name="depot_verification", methods={"GET"})
+     * @IsGranted("ROLE_WRITER")
+     */
+    public function verification(): Response
+    {
+
+        return $this->render('admin/depot/verification.html.twig', []);
+    }
+
 
     /**
      * @Route("/{id}/{user_email}-@j9a8j7k94", name="depot_delete", methods={"DELETE"})
@@ -166,6 +187,46 @@ class DepotController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('depot_index', ['user_email' => $user_email]);
+        return $this->redirectToRoute('depot_index');
+    }
+
+    /**
+     * @Route("/agence/mes-comissions-{user_email}",name="depot_comission",methods={"GET"})
+     * @IsGranted("ROLE_WRITER")
+     */
+    public function getAgencyComissions($user_email)
+    {
+        $user = $this->getUserByEmail($user_email);
+
+        $comissions = $this->depotRepo->findBy(['user_depot' => $user]);
+        $json[] = $comissions;
+        $json = json_encode($json, JSON_NUMERIC_CHECK);
+        file_put_contents('data.json', $json);
+        return $this->render("admin/comission/index.html.twig", compact('comissions'));
+    }
+
+    private function getUserByEmail(string $user_email)
+    {
+        $user = $this->userRepo->findOneByUsernameOrEmail($user_email);
+        return $user;
+    }
+
+     /**
+     * @Route("/depot/imprimer", methods={"GET","POST"},name="depot_report", requirements={"id":"[a-z0-9\-]*"})
+     */
+
+    public function report(Request $request, ReportingService $reportingService)
+    {
+        $code=$request->request->get('code');
+        $depot=$this->depotRepo->findOneBy(['codeDepot' => $code]);
+        if (!empty($depot)) {
+            $reportingService->render($depot,"depot");
+        } else {
+              $this->addFlash('danger', 'Vous ne pouvez pas imprimer. Car, ce code est invalide!');
+              return $this->redirectToRoute('depot_index');
+        }
+        
+
+       
     }
 }

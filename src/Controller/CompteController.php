@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/compte")
+ * @Route("/admin/compte")
  */
 class CompteController extends AbstractController
 {
@@ -36,10 +36,8 @@ class CompteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager = $this->getDoctrine()->getManager();
-            $compte->setMontantCredit(0);
-            $compte->setSolde(0);
-            $compte->setCommissionSousAgent(0);
             $entityManager->persist($compte);
             $entityManager->flush();
 
@@ -83,9 +81,9 @@ class CompteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $compte->setMontantCredit(0);
+
             $compte->setSolde(0);
-            $compte->setCommissionSousAgent(0);
+
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('compte_index');

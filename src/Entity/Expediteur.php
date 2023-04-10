@@ -6,6 +6,7 @@ use App\Repository\ExpediteurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ExpediteurRepository::class)
@@ -43,6 +44,8 @@ class Expediteur
      * @ORM\OneToMany(targetEntity=Depot::class, mappedBy="expediteur",cascade={"persist"})
      */
     private $depots;
+
+
 
     public function __construct()
     {

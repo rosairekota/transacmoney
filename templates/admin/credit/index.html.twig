@@ -1,0 +1,63 @@
+{% extends "admin/bars.html.twig" %}
+{% block contenpage %}
+<div class="">
+    <div class="page-title">
+
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>
+                        Liste des Rechargements</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a href="{{ path('credit_new') }}" class="btn btn-success">RECHARGER UNE AGENCE</a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <table id="example" class="display table table-striped table-bordered dataminetables">
+                            <thead>
+                                <th>N°</th>
+                                <th>MONTANT RECHARGE</th>
+                                <th>DATE RECHARGEMENT</th>
+                                <th>CODE RECHARGEMENT</th>
+                                <th>ANCIEN SOLDE</th>
+                                <th>NOUVEAU SOLDE</th>
+                                <th>AGENCE</th>
+                                <th>SUPPRIMER</th>
+                            </thead>
+                            <tbody>
+                                {% for credit in credits %}
+                                <tr>
+                                    <td>{{ credit.id }}</td>
+                                    <td>{{ credit.creditAmount }}</td>
+                                    <td>{{ credit.createdAt ? credit.createdAt|date('d/m/Y à H:i:s') : '' }}</td>
+                                    <td>{{ credit.creditCode }}</td>
+                                    <td>{{ credit.holdSolde }}</td>
+                                    <td>{{ credit.account.solde }}
+
+                                    </td>
+                                    <td>{{ credit.account.user.agence.name }} </td>
+
+                                    <td> <a href="{{ path('credit_delete', {'id': credit.id}) }}"
+                                            class="btn btn-danger disable-btn del-link" type="submit">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

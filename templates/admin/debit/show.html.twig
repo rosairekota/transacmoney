@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Debit{% endblock %}
+
+{% block body %}
+    <h1>Debit</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ debit.id }}</td>
+            </tr>
+            <tr>
+                <th>Amount</th>
+                <td>{{ debit.amount }}</td>
+            </tr>
+            <tr>
+                <th>Debit_code</th>
+                <td>{{ debit.debitCode }}</td>
+            </tr>
+            <tr>
+                <th>Request_date</th>
+                <td>{{ debit.requestDate ? debit.requestDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ debit.status ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Debit_date</th>
+                <td>{{ debit.debitDate ? debit.debitDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('debit_index') }}">back to list</a>
+
+    <a href="{{ path('debit_edit', {'id': debit.id}) }}">edit</a>
+
+    {{ include('debit/_delete_form.html.twig') }}
+{% endblock %}

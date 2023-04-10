@@ -1,0 +1,93 @@
+{% extends "admin/bars.html.twig" %}
+
+{% block contenpage %}
+<div class="container">
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Verification du taux de change</h2>
+
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6>Saisir le taux Actuel</h6>
+                        </div>
+                        <div class="col-sm-6">
+
+                            <input type="text" id="inputTaux" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-success" id="btnReset">Renitialiser le taux</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6>FC-USD</h6>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" id="inputVerfication" class="form-control">
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h2 id="dollarValue">0.0 USD</h2>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h6>USD-FC</h6>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" id="inputCongolaiseVerfication" class="form-control">
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h2 id="congolaiseValue">0 FC</h2>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const inputTaux = document.querySelector("#inputTaux")
+        const inputVerfication = document.querySelector("#inputVerfication")
+        const form = document.querySelector("form")
+        const dollarValue = document.querySelector("#dollarValue");
+        const inputCongolaiseVerfication = document.querySelector("#inputCongolaiseVerfication");
+        const congolaiseValue = document.querySelector('#congolaiseValue');
+        const btnReset = document.querySelector("#btnReset");
+
+        inputTaux.addEventListener('keyup', function (e) {
+            e.preventDefault();
+            let valueOfTaux = parseInt(e.target.value);
+
+            inputVerfication.addEventListener('keyup', function (e) {
+                e.preventDefault();
+                let valueOfInput = parseFloat(e.target.value) / valueOfTaux;
+                dollarValue.textContent = valueOfInput ? `${valueOfInput} USD` : `${0} USD`;
+            })
+            inputCongolaiseVerfication.addEventListener('keyup', function (e) {
+                e.preventDefault();
+                let valueOfInput = parseFloat(e.target.value) * valueOfTaux;
+                congolaiseValue.textContent = valueOfInput ? `${valueOfInput} FC` : `${0} FC`;
+            })
+
+        })
+        const resetTaux = (e) => {
+            inputTaux.value = "";
+        }
+        btnReset.addEventListener('click', resetTaux)
+
+
+    </script>
+</div>
+{% endblock %}

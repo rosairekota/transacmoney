@@ -1,0 +1,45 @@
+{% extends "admin/bars.html.twig" %}
+
+{% block contenpage %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.1/css/all.min.css" rel="stylesheet">
+
+<div class="body bg-default">
+    <div class="main-content">
+        {% if is_granted("ROLE_SUPERUSER") %}
+        <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row">
+                        <div class="col-12 img-thumbnail mb-4">
+                            <h2 class="mb-2 text-center text-uppercase" style="font-weight: bold;">Configurations initiales</h2>
+                            <p class="text-center text-danger">Bienvenue dans la configuration générale du
+                                <strong>Transacmoney</strong>. &nbsp;
+                                </p>
+                                <ul>
+                                    <li>Cette Section vous permet de modifier les marges
+                                bénéficiaires et pourcentages des
+                                agences</li>
+                                <li>Attention! toutes modification entraine un changement du Système
+                                </li>
+                                </ul>
+                        </div>
+                        <div class="col-sm-12 col-md-12">
+                            <div class="row">
+                                {% for setting in settings %}
+                                {% include "settings/card/_card.html.twig" %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <!-- Page content -->
+    </div>
+</div>
+
+
+{% endblock %}

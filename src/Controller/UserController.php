@@ -6,17 +6,21 @@ namespace App\Controller;
 
 use App\Entity\Role;
 use App\Entity\User;
-use App\Form\ChangePwsdFormType;
+use App\Entity\Agence;
 use App\Form\UserFormType;
+use App\Form\ChangePwsdFormType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\DebitRepository;
+use App\Repository\CreditRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends BaseController
 {
@@ -60,7 +64,7 @@ class UserController extends BaseController
     }
 
     /**
-     * @Route("/admin/user/new",name="app_admin_new_user")
+     * @Route("/admin/creer-une-nouvelle-agence-avec-son-agent",name="app_admin_new_user")
      * @IsGranted("ROLE_SUPERUSER")
      */
     public function newUser(Request $request, TranslatorInterface $translator)
@@ -70,6 +74,7 @@ class UserController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var  User $user */
             $user = $form->getData();
+
             /** @var Role $role */
             $password = $form["justpassword"]->getData();
             $role = $form["role"]->getData();
@@ -78,7 +83,11 @@ class UserController extends BaseController
                 ->setAdmin(true)
                 ->setPassword($this->passwordEncoder->encodePassword($user, $password))
                 ->setRoles([$role->getRoleName()]);
+            $account = $user->getAccount();
+            $account->setUser($user);
+            // dd($account);
             $this->entityManager->persist($user);
+            $this->entityManager->persist($account);
             $this->entityManager->flush();
             $this->addFlash("success", $translator->trans('backend.user.add_user'));
             return $this->redirectToRoute("app_admin_users");
@@ -114,6 +123,22 @@ class UserController extends BaseController
     }
 
     /**
+     * @Route("/admin/agence/visualiser/{id}-en-detail", name="app_admin_user_agency", methods={"GET"})
+     * @IsGranted("ROLE_WRITER")
+     */
+    public function show(User $user, CreditRepository $creditRepo, DebitRepository $debitRepo): Response
+    {
+        //dd($user->getAccount()->getId());
+        $credits = $creditRepo->findBy(['account' => $user->getAccount()->getId()]);
+        $debits = $debitRepo->findBy(['account' => $user->getAccount()->getId()]);
+        // dd($credits);
+        return $this->render('admin/user/show.html.twig', [
+            'user' => $user,
+            'credits' => $credits,
+            'debits' => $debits
+        ]);
+    }
+    /**
      * @Route("/admin/user/changevalidite/{id}",name="app_admin_changevalidite_user",methods={"post"})
      * @IsGranted("ROLE_SUPERUSER")
      */
@@ -137,7 +162,7 @@ class UserController extends BaseController
 
     /**
      * @Route("/admin/user/changePassword",name="app_admin_changepswd")
-     * @IsGranted("ROLE_SUPERUSER")
+     * @IsGranted("ROLE_WRITER")
      */
     public function changePswd(Request $request, TranslatorInterface $translator)
     {

@@ -1223,7 +1223,7 @@
 
 .img-circle.profile_img {
   width: 70%;
-  background: #fff;
+  background: #86a6c5;
   margin-left: 15%;
   z-index: 1000;
   position: inherit;
@@ -1255,6 +1255,7 @@
   text-align: center;
 }
 
+
 .profile.img_2 .profile_pic {
   width: 100%;
 }
@@ -1278,6 +1279,7 @@
   font-size: 10px;
   min-width: inherit;
   color: #c4cfda;
+  
 }
 
 .active a span.fa {
@@ -1300,11 +1302,11 @@
 
 .nav_menu {
   float: left;
-  background: #2a3f54;
-  border-bottom: 1px solid #2a3f54;
+  background: #ecf0f1;
   margin-bottom: 10px;
   width: 100%;
-  color: white !important;
+  color: #124e8a; 
+
   position: relative;
 }
 
@@ -1385,7 +1387,7 @@ input::placeholder {
 .nav_title {
   width: 230px;
   float: left;
-  background: #2a3f54;
+  background: #124e8a;
   border-radius: 0;
   height: 57px;
   padding: 0px;
@@ -1933,20 +1935,7 @@ a:focus {
 }
 
 .nav.side-menu > li.active > a {
-  text-shadow: rgba(0, 0, 0, 0.25) 0 -1px 0;
-  background: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      from(#334556),
-      to(#2c4257)
-    ),
-    #2a3f54;
-  background: linear-gradient(#334556, #2c4257), #2a3f54;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0,
-    inset rgba(255, 255, 255, 0.16) 0 1px 0;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0,
-    inset rgba(255, 255, 255, 0.16) 0 1px 0;
+  background:rgba(22, 54, 102, 0.829);
 }
 
 .navbar-brand,
@@ -2986,7 +2975,7 @@ span.right {
   padding: 5px 0 0 0;
   position: fixed;
   width: 230px;
-  background: #2a3f54;
+  background: #124e8a;
 }
 
 .sidebar-footer a {
@@ -3095,10 +3084,11 @@ a.user-profile {
 }
 
 .user-profile img {
-  width: 29px;
-  height: 29px;
+  width: 39px;
+  height: 39px;
   border-radius: 50%;
   margin-right: 10px;
+  border: 2px solid #94b7da;
 }
 
 ul.top_profiles {
@@ -3191,7 +3181,9 @@ h4.graph_title {
   text-align: right;
   margin-right: 10px;
 }
-
+.scroll-view{
+  background: #124e8a;
+}
 .main_menu .fa {
   width: 26px;
   opacity: 0.99;
@@ -3818,8 +3810,8 @@ a.btn-danger {
 }
 
 .btn-success {
-  background: #26b99a !important;
-  border: 1px solid #169f85;
+  background: #155ca3 !important;
+  border: 1px solid #124e8a;
 }
 
 .btn-success:hover,
@@ -3827,9 +3819,21 @@ a.btn-danger {
 .btn-success:active,
 .btn-success.active,
 .open .dropdown-toggle.btn-success {
-  background: #169f85;
+  background: #ffffff!important;
+  color: #124e8a;
+   border: 1px solid #124e8a;
 }
-
+.form-control{
+  border-radius: 3px;
+}
+.form-control::placeholder{
+  color: #4346497a !important;
+  
+}
+.form-control:focus{
+  border: 1px solid #1c68b4;
+  border-radius: 0;
+}
 .btn-dark {
   color: #e9edef;
   background-color: #4b5f71;
@@ -3871,7 +3875,7 @@ a.btn-danger {
   color: #ffffff;
 }
 .btn-danger:hover {
-  background-color: #f7f7f7 !important;
+  background-color:  #fff !important;
   border: 1px sloid#FF3636 !important;
   color: #ff3636 !important;
 }
@@ -6434,3 +6438,5 @@ ul.notifications {
   font-style: italic;
   font-size: 18px;
 }
+th{text-transform: uppercase;}
+h2 {color:#124e8a;}

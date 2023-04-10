@@ -2,9 +2,7 @@
 
 {% block contenpage %}
     <div class="container">
-        <h1>{{ "backend.depot.create"|trans }}</h1>
-
-        {{ include('admin/depot/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+        {{ include('admin/depot/_form.html.twig', {'button_label': 'Enregistrer','title':'Effectuer un nouveau Dépot'}) }}
 
     </div>
 {% endblock %}

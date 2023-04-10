@@ -1,0 +1,88 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Paiements</h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-12">
+                    {% if not is_granted("ROLE_SUPERUSER") %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <a class="btn btn-success" href="{{ path('debit_new') }}">Demader un paiement
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="row">
+                        <table id="example" class="display table table-striped table-bordered dataminetables">
+                            <thead id="payement">
+                                <th>N°</th>
+                                <th>MONTANT </th>
+                                <th>CODE</th>
+                                <th>DATE DEMANDE</th>
+                                <th>STATUT</th>
+                                <th>DATE PAIEMENT</th>
+                                <th>AGENCE REçU</th>
+                                {% if is_granted('ROLE_SUPERUSER') %}
+                                <th>VALIDER</th>
+                                <th>SUPPRIMER</th>
+                                {% endif %}
+
+                            </thead>
+                            <tbody>
+                                {% set i = 0 %}
+                                {% for debit in debits %}
+                                {% set i = i + 1 %}
+                                <tr>
+                                    <td>{{ i }}</td>
+                                    <td>{{ debit.amount }}</td>
+                                    <td>{{ debit.debitCode }}</td>
+                                    <td>{{ debit.requestDate ? debit.requestDate|date('d/m/Y à H:i:s') : '' }}</td>
+                                    {% if debit.status %}
+                                    <td style="color: red;">Traitée</td>
+                                    {% else %}
+                                    <td style="color: seagreen;">En attente</td>
+                                    {% endif %}
+
+                                    <td>{{ debit.debitDate ? debit.debitDate|date('d/m/Y à H:i:s') : '' }}</td>
+                                    <td>{{ debit.user.agence.name }}</td>
+                                    {% if is_granted('ROLE_SUPERUSER') %}
+                                    <td>
+                                        <a href="{{ path('debit_delete', {'id': debit.id}) }}"
+                                            class="btn btn-success disable-btn edit-link">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                    </td>
+
+
+                                    <td>
+                                        <a href="{{ path('debit_delete', {'id': debit.id}) }}"
+                                            class="btn btn-danger disable-btn del-link" type="submit">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                    {% endif %}
+
+                                </tr>
+                                {% endfor %}
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

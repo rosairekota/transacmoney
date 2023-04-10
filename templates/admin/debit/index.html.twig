@@ -1,0 +1,90 @@
+{% extends "admin/bars.html.twig" %}
+{% block contenpage %}
+<div class="">
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Les Demandes de Paiements des Agences</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a href="{{ path('debit_new') }}" class="btn btn-success">DEMANDER UN PAIEMENT</a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="row">
+                        <table id="example" class="display table table-striped table-bordered dataminetables">
+                            <thead id="payement">
+                                <th>N°</th>
+                                <th>MONTANT </th>
+                                <th>DATE DEMANDE</th>
+                                <th>STATUT</th>
+                                <th>DATE PAIEMENT</th>
+                                <th>AGENCE Demadée</th>
+                                <th>AGENCE REçUe</th>
+                                {% if is_granted('ROLE_SUPERUSER') %}
+                                <th>VALIDER</th>
+                                <th>SUPPRIMER</th>
+                                {% endif %}
+
+                            </thead>
+                            <tbody>
+                                {% set i = 0 %}
+                                {% for debit in debits %}
+                                {% set i = i + 1 %}
+                                <tr>
+                                    <td>{{ i }}</td>
+                                    <td>{{ debit.amount }}</td>
+                                    <td>{{ debit.requestDate ? debit.requestDate|date('d/m/Y à H:i:s') : '' }}</td>
+                                    {% if is_granted('ROLE_SUPERUSER') %}
+                                    {% if debit.status %}
+                                    <td style="color: red;">Traitée</td>
+                                    {% else %}
+                                    <td style="color: seagreen;">En attente</td>
+                                    {% endif %}
+                                    {% endif %}
+                                    <td>{{ debit.debitDate ? debit.debitDate|date('d/m/Y à H:i:s') : '' }}</td>
+                                    <td>{{ debit.account.user.agence.name }}</td>
+                                    <td>{{ debit.user.agence.name }}</td>
+                                    {% if is_granted('ROLE_SUPERUSER') %}
+                                    {% if debit.status %}
+                                    <td>
+
+                                        <a href="{{ path('debit_index')}}" class="btn btn-success disable-btn">
+                                            <i class="fa fa-check"></i>
+                                        </a>
+                                    </td>
+                                    {% else %} <td>
+
+                                        <a href="{{ path('debit_show', {'id': debit.id}) }}" class="btn btn-warning">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </td>
+
+                                    {% endif %}
+
+
+
+                                    <td>
+                                        {% include "admin/debit/_delete.html.twig" %}
+                                    </td>
+                                    {% endif %}
+
+                                </tr>
+                                {% endfor %}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

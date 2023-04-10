@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\CompteRepository;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CompteRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CompteRepository::class)
@@ -17,15 +20,20 @@ class Compte
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="float", nullable=true)
+    /** @ORM\Column(type="string", length=50, nullable=true)
      */
-    private $montant_credit;
+    private $numero_compte;
+
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="datetime")
      */
-    private $montant_debit;
+    private $date_ouverture;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $fin_validite;
 
     /**
      * @ORM\Column(type="float", nullable=true)
@@ -33,15 +41,28 @@ class Compte
     private $solde;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comptes")
+     * @ORM\OneToMany(targetEntity=Credit::class, mappedBy="account")
      */
-    private $user_compte;
+    private $credits;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\OneToMany(targetEntity=Debit::class, mappedBy="account")
      */
-    private $commission_sous_agent;
+    private $debits;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     */
+    private $user;
+
+
+    public function __construct()
+    {
+        $this->date_ouverture = new \DateTime();
+        $this->numero_compte = "9097-".str_shuffle(random_int(10,50)."".random_int(100,1000));
+        $this->credits = new ArrayCollection();
+        $this->debits = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -49,62 +70,132 @@ class Compte
         return $this->id;
     }
 
-    public function getMontantCredit(): ?string
+    public function getNumeroCompte(): ?string
     {
-        return $this->montant_credit;
+        return $this->numero_compte;
     }
 
-    public function setMontantCredit(?string $montant_credit): self
+    public function setNumeroCompte(?string $numero_compte): self
     {
-        $this->montant_credit = $montant_credit;
+        $this->numero_compte = $numero_compte;
 
         return $this;
     }
 
-    public function getMontantDebit(): ?string
+
+
+    public function getDateOuverture(): ?\DateTimeInterface
     {
-        return $this->montant_debit;
+        return $this->date_ouverture;
     }
 
-    public function setMontantDebit(?string $montant_debit): self
+    public function setDateOuverture(\DateTimeInterface $date_ouverture): self
     {
-        $this->montant_debit = $montant_debit;
+        $this->date_ouverture = $date_ouverture;
 
         return $this;
     }
 
-    public function getSolde(): ?string
+    public function getFinValidite(): ?\DateTimeInterface
+    {
+        return $this->fin_validite;
+    }
+
+    public function setFinValidite(?\DateTimeInterface $fin_validite): self
+    {
+        $this->fin_validite = $fin_validite;
+
+        return $this;
+    }
+
+    public function getSolde(): ?float
     {
         return $this->solde;
     }
 
-    public function setSolde(?string $solde): self
+    public function setSolde(?float $solde): self
     {
         $this->solde = $solde;
 
         return $this;
     }
 
-    public function getUserCompte(): ?User
+    /**
+     * @return Collection|Credit[]
+     */
+    public function getCredits(): Collection
     {
-        return $this->user_compte;
+        return $this->credits;
     }
 
-    public function setUserCompte(?User $user_compte): self
+    public function addCredit(Credit $credit): self
     {
-        $this->user_compte = $user_compte;
+        if (!$this->credits->contains($credit)) {
+            $this->credits[] = $credit;
+            $credit->setAccount($this);
+        }
 
         return $this;
     }
 
-    public function getCommissionSousAgent(): ?float
+    public function removeCredit(Credit $credit): self
     {
-        return $this->commission_sous_agent;
+        if ($this->credits->removeElement($credit)) {
+            // set the owning side to null (unless already changed)
+            if ($credit->getAccount() === $this) {
+                $credit->setAccount(null);
+            }
+        }
+
+        return $this;
     }
 
-    public function setCommissionSousAgent(?float $commission_sous_agent): self
+    /**
+     * @return Collection|Debit[]
+     */
+    public function getDebits(): Collection
     {
-        $this->commission_sous_agent = $commission_sous_agent;
+        return $this->debits;
+    }
+
+    public function addDebit(Debit $debit): self
+    {
+        if (!$this->debits->contains($debit)) {
+            $this->debits[] = $debit;
+            $debit->setAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDebit(Debit $debit): self
+    {
+        if ($this->debits->removeElement($debit)) {
+            // set the owning side to null (unless already changed)
+            if ($debit->getAccount() === $this) {
+                $debit->setAccount(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
 
         return $this;
     }
