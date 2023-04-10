@@ -87,7 +87,7 @@
 										<td>{{ depot.dateDepot ? depot.dateDepot|date('d/m/Y à H:i:s') : '' }}</td>
 										{% if is_granted("ROLE_SUPERUSER") %}
 										{% if depot.retrait %}
-										<td style="color: red;">Traité</td>
+										<td style="color: yellow;">Traité</td>
 										{% else %}
 										<td style="color: seagreen;">En attente</td>
 										{% endif %}
